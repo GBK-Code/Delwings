@@ -122,5 +122,13 @@ namespace Delwings.Controllers
             );
             return await Login(newAccount.Login, newAccount.Password);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync("Cookies");
+            return RedirectToAction("Login", "Auth");
+        }
     }
 }

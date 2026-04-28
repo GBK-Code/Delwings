@@ -1,9 +1,6 @@
-﻿using Delwings.Models;
-using Delwings.Models.DTO;
-using Delwings.Models.Enums;
+﻿using Delwings.Models.Requests;
 using Delwings.Services;
 using Delwings.Services.Dashboards;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,104 +29,52 @@ namespace Delwings.Controllers
             _accountRegistrationService = accountRegistrationService;
         }
 
-        private RedirectToActionResult Reload(string tab)
-        {
-            return RedirectToAction("Dashboard", "Head", new { tab });
-        }
-
         public async Task<IActionResult> Dashboard(string tab)
         {
-            string? identityName = User.Identity?.Name;
-            if (string.IsNullOrEmpty(identityName)) { return RedirectToAction("AccessDenied", "Home"); }
-
+            string identityName = User.Identity!.Name!;
             var pageVM = await _headDashboardService.BuildAsync(tab, identityName);
 
             return View(pageVM);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RegisterAdmin(
-                string name,
-                string surname,
-                string login,
-                string phone,
-                string email,
-                string password,
-                string passwordConfirm
-        )
+        [HttpGet]
+        public RedirectToActionResult ReloadToTab(string tab)
         {
-            if (password != passwordConfirm) { return RedirectToAction("BadReq", "Home"); }
+            return RedirectToAction("Dashboard", "Head", new { tab });
+        }
 
-            CreateAccountDTO dto = new CreateAccountDTO()
-            { 
-                Login = login,
-                Password = password,
-                Name = name,
-                Surname = surname,
-                Phone = phone,
-                Email = email
-            };
+        [HttpPost]
+        public async Task<IActionResult> RegisterAdmin(CreateAccountRequest request)
+        {
+            if (request.Password != request.PasswordConfirm) { return RedirectToAction("BadReq", "Home"); }
+            int accountId = await _accountRegistrationService.RegisterAdminAsync(request);
 
-            int accountId = await _accountRegistrationService.RegisterAdminAsync(dto);
-
-            return Reload("admins");
+            return ReloadToTab("admins");
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteAdmin(int id)
         {
-            var user = await _accountService.GetAccountByIdAsync(id);
-            if (user == null || user.Role != AccountRoles.Admin) { return BadRequest(); }
+            var success = await _accountService.DeleteAdminAccountByIdAsync(id);
+            if (!success) { return BadRequest(); }
 
-            await _accountService.DeleteAccountByIdAsync(id);
-            return Reload("admins");
+            return ReloadToTab("admins");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPlace(
-                string country,
-                string city,
-                string address,
-                string contact,
-                PlaceTypes placeType
-        )
+        public async Task<IActionResult> AddPlace(CreatePlaceRequest request)
         {
-            Place newPlace = new Place
-            {
-                Address = address,
-                City = city,
-                Country = country,
-                Contact = contact,
-                Type = placeType
-            };
-
-            await _placeService.CreatePlaceAsync(newPlace);
-
-            return Reload("places");
+            await _placeService.CreatePlaceAsync(request);
+            return ReloadToTab("places");
         }
 
         [HttpPost]
         public async Task<IActionResult> DeletePlace(int id)
-        {
-            var placeToDelete = await _placeService.GetPlaceByIdAsync(id);
-            if (placeToDelete == null) { return BadRequest(); }
+        {           
+            var success = await _placeService.DeletePlaceByIdAsync(id);
+            if (success == false) { return BadRequest(); }
 
-            await _placeService.DeletePlaceByIdAsync(id);
-            return Reload("places");
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> ChooseTab(string tab)
-        {
-            return Reload(tab);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync();
-            return RedirectToAction("Login", "Auth");
+            return ReloadToTab("places");
         }
     }
 }

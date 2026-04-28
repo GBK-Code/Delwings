@@ -5,6 +5,7 @@ using Delwings.Models.Enums;
 using Delwings.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
+using Delwings.Services.Dashboards;
 
 namespace Delwings.Controllers
 {
@@ -15,17 +16,20 @@ namespace Delwings.Controllers
         private readonly CourierApplicationService _courierApplicationService;
         private readonly PlaceService _placesService;
         private readonly OperatorPlacesService _operatorPlacesService;
+        private readonly AdminDashboardService _adminDashboardService;
 
         public AdminController(
             AccountService accountService, 
             CourierApplicationService courierApplicationService, 
             PlaceService placeService, 
-            OperatorPlacesService operatorPlacesService)
+            OperatorPlacesService operatorPlacesService,
+            AdminDashboardService adminDashboardService)
         { 
             _accountService = accountService;
             _courierApplicationService = courierApplicationService;
             _placesService = placeService;
             _operatorPlacesService = operatorPlacesService;
+            _adminDashboardService = adminDashboardService;
         }
 
         private RedirectToActionResult Reload(string tab)
@@ -36,24 +40,9 @@ namespace Delwings.Controllers
         public async Task<IActionResult> Dashboard(string tab)
         {
             var userName = User.Identity?.Name;
-            if (userName.IsNullOrEmpty()) { return RedirectToAction("AcessDenied", "Home"); }
+            if (string.IsNullOrEmpty(userName)) { return RedirectToAction("AcessDenied", "Home"); }
 
-            var me = await _accountService.GetAccountByLoginAsync(userName);
-            var operatorsList = await _accountService.GetAllAccountsAsync();
-            var applicationsList = await _courierApplicationService.GetAllApplicationsAsync();
-
-            var places = await _placesService.GetAllPlacesAsync();
-            var operatorPlaces = await _operatorPlacesService.GetAllOperatorPlacesAsync();
-
-            var vm = new AdminPageVM
-            {
-                Me = me,
-                Tab = tab,
-                OperatorsList = operatorsList.Where(user => user.Role == AccountRoles.Operator).ToList(),
-                PlacesList = places.ToList(),
-                CouriersApplicationsList = applicationsList.Where(app => app.Status == CourierStatuses.Pending).ToList(),
-                OperatorPlacesList = operatorPlaces.ToList()
-            };
+            var vm = _adminDashboardService.Build(tab, userName);
 
             return View(vm);
         }
@@ -100,7 +89,7 @@ namespace Delwings.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterOperator(
+        public async Task<IActionResult> RegisterOperatorAsync(
                 string name,
                 string surname,
                 string login,

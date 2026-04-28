@@ -59,6 +59,17 @@ namespace Delwings.Services
             return true;
         }
 
+        // Particular case
+        public async Task<bool> DeleteAdminAccountByIdAsync(int id)
+        {
+            var accountToDelete = await _repository.GetAccountByIdAsync(id);
+
+            if (accountToDelete == null) { return false; }
+            if (accountToDelete.Role != Models.Enums.AccountRoles.Admin) { return false; }
+
+            return await DeleteAccountByIdAsync(accountToDelete.Id);
+        }
+
         public async Task<bool> CheckValidity(Account? account, string password)
         {
             if (account == null ) { return false; }

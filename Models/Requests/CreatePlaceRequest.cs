@@ -1,14 +1,13 @@
 ﻿using Delwings.Models.Enums;
 
-namespace Delwings.Models
+namespace Delwings.Models.Requests
 {
-    public class Place
+    public class CreatePlaceRequest
     {
-        public int Id { get; set; }
         public string? Country { get; set; }
         public string? City { get; set; }
         public string? Address { get; set; }
         public string? Contact { get; set; }
-        public PlaceTypes Type { get; set; }
+        public PlaceTypes PlaceType { get; set; }
     }
 }

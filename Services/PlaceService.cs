@@ -1,4 +1,5 @@
 ﻿using Delwings.Models;
+using Delwings.Models.Requests;
 using Delwings.Repositories.Interfaces;
 
 namespace Delwings.Services
@@ -11,12 +12,28 @@ namespace Delwings.Services
 
         public async Task<List<Place>> GetAllPlacesAsync() => await _repository.GetAllPlacesAsync();
         public async Task<Place?> GetPlaceByIdAsync(int id) => await _repository.GetPlaceByIdAsync(id);
+
+        public async Task<int> CreatePlaceAsync(CreatePlaceRequest request)
+        {
+            Place place = new Place
+            {
+                Address = request.Address,
+                City = request.City,
+                Country = request.Country,
+                Contact = request.Contact,
+                Type = request.PlaceType
+            };
+
+            return await CreatePlaceAsync(place);
+        }
+
         public async Task<int> CreatePlaceAsync(Place place)
         {
             await _repository.CreatePlaceAsync(place);
             await _repository.SaveChangesAsync();
             return place.Id;
         }
+
         public async Task<bool> UpdatePlaceAsync(int id, Place newData)
         {
             var existingPlace = await _repository.GetPlaceByIdAsync(id);
@@ -32,6 +49,7 @@ namespace Delwings.Services
             await _repository.SaveChangesAsync();
             return true;
         }
+
         public async Task<bool> DeletePlaceByIdAsync(int id)
         {
             var placeToDelete = await _repository.GetPlaceByIdAsync(id);

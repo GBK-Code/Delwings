@@ -1,6 +1,6 @@
 ﻿using Delwings.Models;
-using Delwings.Models.DTO;
 using Delwings.Models.Enums;
+using Delwings.Models.Requests;
 using Delwings.Repositories.Interfaces;
 
 namespace Delwings.Services
@@ -14,7 +14,7 @@ namespace Delwings.Services
             _accountsRepository = accountsRepo;
         }
 
-        public async Task<int> RegisterAccount(CreateAccountDTO dto, AccountRoles role)
+        public async Task<int> RegisterAccount(CreateAccountRequest dto, AccountRoles role)
         {
             Account account = new Account()
             {
@@ -33,9 +33,15 @@ namespace Delwings.Services
             return account.Id;
         }
 
-        public async Task<int> RegisterAdminAsync(CreateAccountDTO dto)
+        public async Task<int> RegisterAdminAsync(CreateAccountRequest dto)
         {
             int accountId = await RegisterAccount(dto, AccountRoles.Admin);
+            return accountId;
+        }
+
+        public async Task<int> RegisterOperatorAsync(CreateAccountRequest dto)
+        {
+            int accountId = await RegisterAccount(dto, AccountRoles.Operator);
             return accountId;
         }
     }

@@ -3,7 +3,7 @@
     <div>
         <h1>@Model.Me.Name @Model.Me.Surname[0].</h1>
 
-        <form method="post" asp-action="Logout">
+        <form method="post" asp-action="Logout" asp-controller="Auth">
             <button type="submit" class="theme-button">Logout</button>
         </form>
     </div>
