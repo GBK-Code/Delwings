@@ -8,13 +8,15 @@ namespace Delwings.Services
     public class AccountRegistrationService
     {
         private readonly IAccountRepository _accountsRepository;
+        private readonly IOperatorPlacesRepository _operatorPlacesRepository;
 
-        public AccountRegistrationService(IAccountRepository accountsRepo)
+        public AccountRegistrationService(IAccountRepository accountsRepo, IOperatorPlacesRepository operatorPlacesRepository)
         {
             _accountsRepository = accountsRepo;
+            _operatorPlacesRepository = operatorPlacesRepository;
         }
 
-        public async Task<int> RegisterAccount(CreateAccountRequest dto, AccountRoles role)
+        private async Task<Account> RegisterAccount(CreateAccountRequest dto, AccountRoles role)
         {
             Account account = new Account()
             {
@@ -30,19 +32,23 @@ namespace Delwings.Services
             await _accountsRepository.CreateAccountAsync(account);
             await _accountsRepository.SaveChangesAsync();
 
-            return account.Id;
+            return account;
         }
 
         public async Task<int> RegisterAdminAsync(CreateAccountRequest dto)
         {
-            int accountId = await RegisterAccount(dto, AccountRoles.Admin);
-            return accountId;
+            Account account = await RegisterAccount(dto, AccountRoles.Admin);
+            return account.Id;
         }
 
-        public async Task<int> RegisterOperatorAsync(CreateAccountRequest dto)
+        public async Task<int> RegisterOperatorAsync(CreateAccountRequest dto, int placeId)
         {
-            int accountId = await RegisterAccount(dto, AccountRoles.Operator);
-            return accountId;
+            Account account = await RegisterAccount(dto, AccountRoles.Operator);
+
+            var operatorPlace = await _operatorPlacesRepository.BuildOperatorPlace(account.Id, placeId);
+            await _operatorPlacesRepository.CreateOperatorPlaceAsync(operatorPlace);
+
+            return account.Id;
         }
     }
 }

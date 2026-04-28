@@ -44,7 +44,7 @@
                             }
                             else
                             {
-                                <form method="post" asp-action="AssignEmptySpace">
+                                <form method="post" asp-action="AssignOperatorToEmptyPlace">
                                     <input type="hidden" name="operatorId" value="@oper.Id" />
                                     <td>
                                         <input name="placeId" class="theme-input" placeholder="PlaceID to assign" required />
@@ -56,7 +56,7 @@
                             }
                         }
                         <td>
-                            <form method="post" asp-action="DeleteOperator">
+                            <form method="post" asp-action="DeleteOperatorById">
                                 <input type="hidden" name="id" value="@oper.Id" />
                                 <button class="theme-button theme-button-table">Delete</button>
                             </form>

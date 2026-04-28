@@ -1,6 +1,8 @@
 ﻿using Delwings.Models;
 using Delwings.Models.Enums;
 using Delwings.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Delwings.Services
 {
@@ -18,6 +20,17 @@ namespace Delwings.Services
             if (application == null) { return CourierStatuses.Declined; }
 
             return application.Status;
+        }
+
+        public async Task<bool> SetStatusAsync(int applicationId, CourierStatuses status)
+        {
+            CourierApplication? newData = await _repository.GetApplicationByIdAsync(applicationId);
+            if (newData == null) { return false; }
+
+            newData.Status = status;
+
+            await _repository.UpdateApplicationAsync(newData);
+            return true;
         }
 
         public async Task<int> CreateApplicationAsync(CourierApplication CourierApplication)

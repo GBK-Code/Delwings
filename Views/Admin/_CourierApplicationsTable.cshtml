@@ -12,25 +12,23 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var courier in Model.CouriersApplicationsList)
+                @foreach (var application in Model.CouriersApplicationsList)
                 {
                     <tr>
-                        <td>@courier.Id</td>
-                        <td>@courier.CourierId</td>
-                        <td>@courier.Name</td>
-                        <td>@courier.Surname</td>
-                        <td>@courier.Phone</td>
+                        <td>@application.Id</td>
+                        <td>@application.CourierId</td>
+                        <td>@application.Name</td>
+                        <td>@application.Surname</td>
+                        <td>@application.Phone</td>
                         <td class="align-middle">
                             <div class="d-flex justify-content-center gap-2">
-                                <form method="post" asp-action="AcceptCourier">
-                                    <input type="hidden" name="courierid" value="@courier.CourierId" />
-                                    <input type="hidden" name="applicationId" value="@courier.Id" />
+                                <form method="post" asp-action="AcceptApplication">
+                                    <input type="hidden" name="applicationId" value="@application.Id" />
                                     <button class="theme-button theme-button-table">Accept</button>
                                 </form>
 
-                                <form method="post" asp-action="DeclineCourier">
-                                    <input type="hidden" name="courierId" value="@courier.CourierId" />
-                                    <input type="hidden" name="applicationId" value="@courier.Id" />
+                                <form method="post" asp-action="DeclineApplication">
+                                    <input type="hidden" name="applicationId" value="@application.Id" />
                                     <button class="theme-button theme-button-table">Decline</button>
                                 </form>
                             </div>

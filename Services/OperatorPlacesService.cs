@@ -13,13 +13,19 @@ namespace Delwings.Services
         public async Task<OperatorPlace?> GetOperatorPlaceByIdAsync(int id) => await _repository.GetOperatorPlaceByIdAsync(id);
         public async Task<OperatorPlace?> GetOperatorPlaceByOperatorIdAsync(int id) => await _repository.GetOperatorPlaceByOperatorIdAsync(id);
         public async Task<OperatorPlace?> GetOperatorPlaceByPlaceIdAsync(int id) => await _repository.GetOperatorPlaceByPlaceIdAsync(id);
-        public async Task<int> CreateOperatorPlace(int operatorId, int placeId)
+        public async Task<OperatorPlace> BuildOperatorPlace(int operatorId, int placeId)
         {
             var newPlace = new OperatorPlace
             {
                 OperatorId = operatorId,
                 PlaceId = placeId
             };
+
+            return newPlace;
+        }
+        public async Task<int> CreateOperatorPlace(int operatorId, int placeId)
+        {
+            OperatorPlace newPlace = await BuildOperatorPlace(operatorId, placeId);
 
             await _repository.CreateOperatorPlaceAsync(newPlace);
             await _repository.SaveChangesAsync();
