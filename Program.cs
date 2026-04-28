@@ -3,6 +3,7 @@ using Delwings.Models;
 using Delwings.Repositories;
 using Delwings.Repositories.Interfaces;
 using Delwings.Services;
+using Delwings.Services.Dashboards;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,11 @@ builder.Services.Configure<ApiSettings>
     );
 
 builder.Services.AddHttpClient<ApiService>();
+
+builder.Services.AddScoped<AccountRegistrationService>();
+
+// Dashboards
+builder.Services.AddScoped<HeadDashboardService>();
 
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<OrdersService>();

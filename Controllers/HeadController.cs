@@ -1,11 +1,12 @@
 ﻿using Delwings.Models;
+using Delwings.Models.DTO;
 using Delwings.Models.Enums;
 using Delwings.Services;
+using Delwings.Services.Dashboards;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.IdentityModel.Tokens;
+
 
 namespace Delwings.Controllers
 {
@@ -14,11 +15,21 @@ namespace Delwings.Controllers
     {
         private readonly AccountService _accountService;
         private readonly PlaceService _placeService;
+        private readonly HeadDashboardService _headDashboardService;
+        private readonly AccountRegistrationService _accountRegistrationService;
 
-        public HeadController(AccountService accountService, PlaceService placeService)
+        public HeadController 
+        (
+            AccountService accountService, 
+            PlaceService placeService, 
+            HeadDashboardService headDashboardService, 
+            AccountRegistrationService accountRegistrationService
+        )
         {
             _accountService = accountService;
             _placeService = placeService;
+            _headDashboardService = headDashboardService;
+            _accountRegistrationService = accountRegistrationService;
         }
 
         private RedirectToActionResult Reload(string tab)
@@ -28,32 +39,10 @@ namespace Delwings.Controllers
 
         public async Task<IActionResult> Dashboard(string tab)
         {
-            var identityName = User.Identity?.Name;
-            if (identityName.IsNullOrEmpty()) { return RedirectToAction("AccessDenied", "Home"); }
+            string? identityName = User.Identity?.Name;
+            if (string.IsNullOrEmpty(identityName)) { return RedirectToAction("AccessDenied", "Home"); }
 
-            var user = await _accountService.GetAccountByLoginAsync(identityName);
-            if (user == null) { return RedirectToAction("AccessDenied", "Home"); }
-
-            var users = await _accountService.GetAllAccountsAsync();
-            List<Account> _admins = users.Where(user => user.Role == AccountRoles.Admin).ToList();
-
-            var places = await _placeService.GetAllPlacesAsync();
-
-            ViewBag.PlaceTypes = Enum.GetValues(typeof(PlaceTypes))
-                .Cast<PlaceTypes>()
-                .Select(e => new SelectListItem
-                {
-                    Value = e.ToString(),
-                    Text = e.ToString()
-                });
-
-            var pageVM = new HeadPageVM
-            {
-                Me = user,
-                Tab = tab,
-                AdminAccounts = _admins,
-                Places = places
-            };
+            var pageVM = await _headDashboardService.BuildAsync(tab, identityName);
 
             return View(pageVM);
         }
@@ -69,23 +58,19 @@ namespace Delwings.Controllers
                 string passwordConfirm
         )
         {
-            if (password != passwordConfirm)
-            {
-                return RedirectToAction("BadReq", "Home");
-            }
+            if (password != passwordConfirm) { return RedirectToAction("BadReq", "Home"); }
 
-            Account newAccount = new Account
-            {
+            CreateAccountDTO dto = new CreateAccountDTO()
+            { 
+                Login = login,
+                Password = password,
                 Name = name,
                 Surname = surname,
-                Login = login,
                 Phone = phone,
-                Email = email,
-                Password = password,
-                Role = AccountRoles.Admin
+                Email = email
             };
 
-            await _accountService.CreateAccountAsync(newAccount);
+            int accountId = await _accountRegistrationService.RegisterAdminAsync(dto);
 
             return Reload("admins");
         }
