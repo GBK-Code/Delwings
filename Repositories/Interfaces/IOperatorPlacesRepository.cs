@@ -5,7 +5,6 @@ namespace Delwings.Repositories.Interfaces
     public interface IOperatorPlacesRepository
     {
         Task<List<OperatorPlace>> GetAllOperatorPlacesAsync();
-        Task<OperatorPlace> BuildOperatorPlace(int operatorId, int placeId);
         Task<OperatorPlace?> GetOperatorPlaceByIdAsync(int id);
         Task<OperatorPlace?> GetOperatorPlaceByOperatorIdAsync(int operatorId);
         Task<OperatorPlace?> GetOperatorPlaceByPlaceIdAsync(int placeId);

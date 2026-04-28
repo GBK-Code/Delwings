@@ -37,19 +37,13 @@ namespace Delwings.Controllers
             return View(pageVM);
         }
 
-        [HttpGet]
-        public RedirectToActionResult ReloadToTab(string tab)
-        {
-            return RedirectToAction("Dashboard", "Head", new { tab });
-        }
-
         [HttpPost]
         public async Task<IActionResult> RegisterAdmin(CreateAccountRequest request)
         {
             if (request.Password != request.PasswordConfirm) { return RedirectToAction("BadReq", "Home"); }
             int accountId = await _accountRegistrationService.RegisterAdminAsync(request);
 
-            return ReloadToTab("admins");
+            return RedirectToAction("Dashboard", "Head", new { tab = "admins" });
         }
 
         [HttpPost]
@@ -58,14 +52,14 @@ namespace Delwings.Controllers
             var success = await _accountService.DeleteAdminAccountByIdAsync(id);
             if (!success) { return BadRequest(); }
 
-            return ReloadToTab("admins");
+            return RedirectToAction("Dashboard", "Head", new { tab = "admins" });
         }
 
         [HttpPost]
         public async Task<IActionResult> AddPlace(CreatePlaceRequest request)
         {
             await _placeService.CreatePlaceAsync(request);
-            return ReloadToTab("places");
+            return RedirectToAction("Dashboard", "Head", new { tab = "places" });
         }
 
         [HttpPost]
@@ -74,7 +68,7 @@ namespace Delwings.Controllers
             var success = await _placeService.DeletePlaceByIdAsync(id);
             if (success == false) { return BadRequest(); }
 
-            return ReloadToTab("places");
+            return RedirectToAction("Dashboard", "Head", new { tab = "places" });
         }
     }
 }

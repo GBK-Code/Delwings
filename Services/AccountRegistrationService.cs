@@ -8,12 +8,12 @@ namespace Delwings.Services
     public class AccountRegistrationService
     {
         private readonly IAccountRepository _accountsRepository;
-        private readonly IOperatorPlacesRepository _operatorPlacesRepository;
+        private readonly OperatorPlacesService _operatorPlacesService;
 
-        public AccountRegistrationService(IAccountRepository accountsRepo, IOperatorPlacesRepository operatorPlacesRepository)
+        public AccountRegistrationService(IAccountRepository accountsRepo, OperatorPlacesService operatorPlacesService)
         {
             _accountsRepository = accountsRepo;
-            _operatorPlacesRepository = operatorPlacesRepository;
+            _operatorPlacesService = operatorPlacesService;
         }
 
         private async Task<Account> RegisterAccount(CreateAccountRequest dto, AccountRoles role)
@@ -45,8 +45,8 @@ namespace Delwings.Services
         {
             Account account = await RegisterAccount(dto, AccountRoles.Operator);
 
-            var operatorPlace = await _operatorPlacesRepository.BuildOperatorPlace(account.Id, placeId);
-            await _operatorPlacesRepository.CreateOperatorPlaceAsync(operatorPlace);
+            var operatorPlace = await _operatorPlacesService.BuildOperatorPlace(account.Id, placeId);
+            await _operatorPlacesService.CreateOperatorPlaceAsync(account.Id, placeId);
 
             return account.Id;
         }

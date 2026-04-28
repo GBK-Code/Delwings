@@ -44,5 +44,16 @@ namespace Delwings.Services
 
             return true;
         }
+
+        public async Task<bool> DeleteCourierOrderByOrderIdAsync(int orderId)
+        {
+            var orderToDelete = await _repo.GetCourierOrderByOrderIdAsync(orderId);
+            if (orderToDelete == null) { return false; }
+
+            await _repo.DeleteCourierOrderAsync(orderToDelete);
+            await _repo.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

@@ -17,13 +17,13 @@ namespace Delwings.Controllers
         private readonly AdminDashboardService _adminDashboardService;
         private readonly AccountRegistrationService _accountRegistrationService;
 
-        public AdminController(
+        public AdminController 
+            (
             AccountService accountService, 
             CourierApplicationService courierApplicationService, 
-            PlaceService placeService, 
-            OperatorPlacesService operatorPlacesService,
             AdminDashboardService adminDashboardService,
-            AccountRegistrationService accountRegistrationService)
+            AccountRegistrationService accountRegistrationService
+            )
         { 
             _accountService = accountService;
             _courierApplicationService = courierApplicationService;
@@ -38,12 +38,6 @@ namespace Delwings.Controllers
             var vm = await _adminDashboardService.Build(tab, userName);
 
             return View(vm);
-        }
-
-        [HttpGet]
-        public IActionResult ReloadToTab(string tab)
-        {
-            return RedirectToAction("Dashboard", "Admin", new { tab });
         }
 
         [HttpPost]

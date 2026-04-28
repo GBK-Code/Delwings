@@ -10,7 +10,7 @@
             <p class="theme-text">Email: @Model.Me.Email</p>
         </div>
 
-        <form method="post" asp-action="Logout">
+        <form method="post" asp-action="Logout" asp-controller="Auth">
             <button type="submit" class="theme-button">Logout</button>
         </form>
     </div>

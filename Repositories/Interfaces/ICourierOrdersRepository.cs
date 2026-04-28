@@ -8,6 +8,7 @@ namespace Delwings.Repositories.Interfaces
         Task<CourierOrder?> GetCourierOrderByIdAsync(int id);
         Task<CourierOrder?> GetCourierOrderByCourierIdAsync(int id);
         Task<CourierOrder?> GetCourierOrderByToPlaceIdAsync(int placeId);
+        Task<CourierOrder?> GetCourierOrderByOrderIdAsync(int orderId);
         Task CreateCourierOrderAsync(CourierOrder order);
         Task UpdateCourierOrderAsync(CourierOrder order);
         Task DeleteCourierOrderAsync(CourierOrder order);

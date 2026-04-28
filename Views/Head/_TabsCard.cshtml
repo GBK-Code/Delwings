@@ -1,21 +1,9 @@
 ﻿<div class="d-flex flex-column theme-div theme-orange-2 p-3 gap-3 flex-shrink-0 flex-grow-0 theme-tab-mobile" style="max-width: 30%">
-    <form method="get" asp-action="ReloadToTab">
-        <input name="tab" type="hidden" value="overview" />
-        <button class="theme-tab theme-text w-100">Overview</button>
-    </form>
+    <a asp-action="Dashboard" asp-route-tab="overview" class="theme-tab theme-text w-100">Overview</a>
 
-    <form method="get" asp-action="ReloadToTab">
-        <input name="tab" type="hidden" value="admins" />
-        <button class="theme-tab theme-text w-100">Admins</button>
-    </form>
+    <a asp-action="Dashboard" asp-route-tab="admins" class="theme-tab theme-text w-100">Admins</a>
 
-    <form method="get" asp-action="ReloadToTab">
-        <input name="tab" type="hidden" value="places" />
-        <button class="theme-tab theme-text w-100">Places</button>
-    </form>
+    <a asp-action="Dashboard" asp-route-tab="places" class="theme-tab theme-text w-100">Places</a>
 
-    <form method="get" asp-action="ReloadToTab">
-        <input name="tab" type="hidden" value="tables" />
-        <button class="theme-tab theme-text w-100">Tables</button>
-    </form>
+    <a asp-action="Dashboard" asp-route-tab="tables" class="theme-tab theme-text w-100">Tables</a>
 </div>

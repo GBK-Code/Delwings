@@ -39,11 +39,13 @@
 
 .theme-tab {
     border-radius: 10px;
+    text-align: center;
     background-color: var(--orange-1);
     cursor: pointer;
     padding: 20px;
     transition: 0.2s;
     word-break: normal !important;
+    border: black 1px solid;
 }
 
 .theme-tab:hover {

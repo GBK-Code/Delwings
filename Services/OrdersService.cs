@@ -1,4 +1,5 @@
 ﻿using Delwings.Models;
+using Delwings.Models.Requests;
 using Delwings.Repositories.Interfaces;
 
 namespace Delwings.Services
@@ -6,10 +7,21 @@ namespace Delwings.Services
     public class OrdersService
     {
         private readonly IOrdersRepository _repo;
+        private readonly OrderTokensGenerator _tokenGenerator;
+        private readonly OrdersHistoryService _ordersHistoryService;
+        private readonly CourierOrdersService _courierOrdersService;
 
-        public OrdersService(IOrdersRepository repo)
+        public OrdersService (
+            IOrdersRepository repo, 
+            OrderTokensGenerator tokensGenerator, 
+            OrdersHistoryService historyService,
+            CourierOrdersService courierOrdersService
+            )
         {
             _repo = repo;
+            _tokenGenerator = tokensGenerator;
+            _ordersHistoryService = historyService;
+            _courierOrdersService = courierOrdersService;
         }
 
         public async Task<List<Order>> GetAllOrdersAsync()
@@ -19,10 +31,50 @@ namespace Delwings.Services
         public async Task<Order?> GetOrderByIdAsync(int id) => await _repo.GetOrderByIdAsync(id);
         public async Task<Order?> GetOrderByTrackIdAsync(string trackID) => await _repo.GetOrderByTrackIdAsync(trackID);
         public async Task<Order?> GetOrderByReceiverNumberAsync(int receiverNumber) => await _repo.GetOrderByReceiverNumberAsync(receiverNumber);
-        public async Task<int> CreateOrderAsync(Order order)
+
+        public async Task<Order> BuildOrder(OrderRequest request)
         {
+            string? trackId = request.TrackId;
+            int receiverNumber = _tokenGenerator.GenerateReceiverNumber();
+
+            if (request.TrackId == null)
+            {
+                trackId = _tokenGenerator.GenerateTrackId();
+            }
+
+            Order order = new Order()
+            {
+                Id = request.Id,
+                OrderType = request.OrderType,
+                Date = request.Date,
+                Time = request.Time,
+                TrackId = trackId,
+                ReceiverNumber = receiverNumber,
+                SenderId = request.SenderId,
+                IsCarried = false,
+                ReceiverContact = request.Contact,
+                Destination = request.Destination,
+                CurrentLocationId = request.CurrentPlaceId,
+                CourierId = request.CourierId,
+                InsuranceCompany = request.InsuranceCompany,
+                InsurancePrice = request.InsurancePrice
+            };
+
+            return order;
+        }
+        public async Task<int> CreateOrderAsync(OrderRequest request)
+        {
+            Order order = await BuildOrder(request);
+
             await _repo.AddOrderAsync(order);
             await _repo.SaveChangesAsync();
+
+            await _ordersHistoryService.CreateRecordAsync(new OrdersHistory
+            {
+                OrderId = order.Id,
+                PlaceId = order.CurrentLocationId
+            });
+
             return order.Id;
         }
         public async Task<bool> UpdateOrderAsync(int id, Order updatedOrder)
@@ -48,10 +100,13 @@ namespace Delwings.Services
         public async Task<bool> DeleteOrderAsync(int id)
         {
             var existing = await _repo.GetOrderByIdAsync(id);
-            if (existing is null) return false;
+            if (existing == null) { return false; }
 
             await _repo.DeleteOrderAsync(existing);
             await _repo.SaveChangesAsync();
+
+            await _courierOrdersService.DeleteCourierOrderByOrderIdAsync(id);
+
             return true;
         }
     }

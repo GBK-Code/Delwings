@@ -23,7 +23,7 @@ namespace Delwings.Services
 
             return newPlace;
         }
-        public async Task<int> CreateOperatorPlace(int operatorId, int placeId)
+        public async Task<int> CreateOperatorPlaceAsync(int operatorId, int placeId)
         {
             OperatorPlace newPlace = await BuildOperatorPlace(operatorId, placeId);
 

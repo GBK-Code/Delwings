@@ -37,6 +37,7 @@ builder.Services.AddScoped<AccountRegistrationService>();
 
 // Dashboards
 builder.Services.AddScoped<HeadDashboardService>();
+builder.Services.AddScoped<AdminDashboardService>();
 
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<OrdersService>();
