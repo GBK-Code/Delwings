@@ -1,0 +1,111 @@
+﻿@model Delwings.Models.TrackerPageVM;
+
+
+<div class="d-flex flex-column w-limit-90 gap-4">
+    <h1 class="theme-text">Order Tracker</h1>
+    <div class="d-flex flex-wrap gap-3">
+        <h5 class="theme-text">Order ID: @Model.Order.Id</h5>
+        <h5 class="theme-text">Track ID: @Model.Order.TrackId</h5>
+    </div>
+
+    @if (Model.Current != null && Model.Current.Type == Delwings.Models.Enums.PlaceTypes.PickUpPoint)
+    {
+        <h1 class="theme-text">The package has arrived</h1>
+    }
+
+    <div class="theme-div theme-orange-2">
+        <div class="d-flex">
+            <img src="~/css/svg//box.svg" />
+            <div>
+                <h4 class="theme-text">Current Location:</h4>
+                @{
+                    var place = Model.Current;
+                    if (place == null)
+                    {
+                        <h2 class="theme-text">The Location is Unknown, but Don't worry</h2>
+                        <h6 class="theme-text">The package will be redirected to the nearest point</h6>
+                    }
+                    else
+                    {
+                        <h2 class="theme-text">@place.Country, @place.City, @place.Address</h2>
+                        <h6 class="theme-text">Place type: @place.Type</h6>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    @if(Model.IsOperator && Model.OperatorPlace != null && Model.Current.Type != Delwings.Models.Enums.PlaceTypes.PickUpPoint)
+    {
+
+        <div class="d-flex flex-column w-100 gap-4">
+            @if(Model.Order.CurrentLocationId != Model.OperatorPlace.Id)
+            {
+                <div class="theme-div theme-orange-2">
+                    <div class="d-flex">
+                        <img src="~/css/svg//box.svg" />
+                        <div>
+                            <h4 class="theme-text">Your Location:</h4>
+                            @{
+                                var operPlace = Model.OperatorPlace;
+                                <h2 class="theme-text">@operPlace.Country, @operPlace.City, @operPlace.Address</h2>
+                                <h6 class="theme-text">Place type: @operPlace.Type</h6>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <form class="flex-grow-1 w-100" method="post" asp-action="AssignPlace">
+                    <input type="hidden" name="orderId" value="@Model.Order.Id" />
+                    <input type="hidden" name="placeId" value="@Model.OperatorPlace.Id" />
+                    <input type="hidden" name="trackId" value="@Model.Order.TrackId" />
+                    <button class="theme-button theme-text w-100 align-items-center">
+                        <h3 class="theme-text">The package arrived</h3>
+                    </button>
+                </form>
+            }
+            else
+            {
+                <h1 class="theme-text">The package is scanned</h1>
+            }
+        </div>
+    }
+
+    @if (Model.IsCourier)
+    {
+        <div class="d-flex flex-column w-100 gap-4">
+            @if (Model.Order.IsCarried == false)
+            {
+                <div class="theme-div theme-orange-2">
+                    <div class="d-flex">
+                        <img src="~/css/svg//box.svg" />
+                        <div class="d-flex align-items-center">
+                            <h4 class="theme-text">Confirm getting the package</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="flex-grow-1 w-100" method="post" asp-action="CourierConfirm">
+                    <input type="hidden" name="orderId" value="@Model.Order.Id" />
+                    <input type="hidden" name="courierId" value="@Model.Courier?.Id" />
+                    <input type="hidden" name="trackId" value="@Model.Order.TrackId" />
+
+                    <button class="theme-button theme-text w-100 align-items-center">
+                        <h3 class="theme-text">Recieve the package</h3>
+                    </button>
+                </form>
+            }
+            else
+            {
+                <h1 class="theme-text">The package is in your hands</h1>
+            }
+        </div>
+    }
+    <h3 class="theme">The package's route': </h3>
+    <ol>
+        @foreach(var orderPlace in Model.OrderPlaces)
+        {
+            <li class="theme-text">@orderPlace.Country - @orderPlace.City - @orderPlace.Address - @orderPlace.Type</li>
+        }
+    </ol>
+</div>

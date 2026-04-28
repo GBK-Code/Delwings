@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="107.41175mm"
+   height="26.738815mm"
+   viewBox="0 0 107.41175 26.738815"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1"
+     transform="translate(-54.428208,-72.12613)">
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:23.5761px;font-family:'Book Antiqua';-inkscape-font-specification:'Book Antiqua, Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#222222;fill-opacity:1;stroke:#d1bc3f;stroke-width:0.49;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:0.980001, 0.49;paint-order:markers fill stroke"
+       x="52.754307"
+       y="88.652977"
+       id="text1"><tspan
+         id="tspan1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:23.5761px;font-family:Dubai;-inkscape-font-specification:'Dubai, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#222222;fill-opacity:1;stroke:none;stroke-width:0.49"
+         x="52.754307"
+         y="88.652977">Delwings</tspan></text>
+    <path
+       style="fill:#222222;fill-opacity:1;stroke:none;stroke-width:0.49;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:0.980001, 0.49;paint-order:markers fill stroke"
+       d="m 55.423266,92.915478 c 20.783725,-6.927909 49.717934,1.765936 49.717934,1.765936 -1.29667,0.299232 4.21851,1.923692 11.33465,3.057924 8.98258,1.43172 20.51605,2.082334 24.11994,-1.699511"
+       id="path1" />
+    <path
+       style="fill:#222222;fill-opacity:1;stroke:none;stroke-width:0.49;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:0.980001, 0.49;paint-order:markers fill stroke"
+       d="m 142.09004,91.013697 c 1.6301,-2.173461 4.48277,-3.396033 4.48277,-3.396033 0,0 -0.91279,-2.186888 3.12434,-5.297811 3.24347,-2.499351 1.36369,-4.131687 4.61861,-5.433654 4.07524,-1.630096 6.65622,-3.667719 7.47127,-2.445146 0.28249,0.423738 -0.59362,2.446674 -1.96094,4.943294 -0.18596,0.339532 -1.14943,0.399662 -1.35187,0.753885 -0.25113,0.439407 0.25478,1.176102 -0.0159,1.628355 -0.84533,1.412181 -1.77053,2.860643 -2.67806,4.180857 -0.24036,0.349664 -1.63214,0.282101 -1.8682,0.610717 -0.27864,0.387868 0.59963,1.167176 0.33248,1.516435 -1.21595,1.589679 -2.28205,2.727364 -2.91726,2.939103 -2.44514,0.815049 -9.23721,-2e-6 -9.23721,-2e-6 z"
+       id="path2" />
+  </g>
+</svg>

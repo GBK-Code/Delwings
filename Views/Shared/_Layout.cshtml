@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Delwings</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/colors.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/animations.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Delwings.styles.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column align-items-center min-vh-100">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm theme-div theme-nav box-shadow m-3 w-limit-90">
+            <div class="d-flex container-fluid justify-content-between">
+                <div>
+                    <img src="~/css/svg/del-logo.svg" class="theme-text" asp-area="" asp-controller="Home" asp-action="Index" style="max-height: 50px"/>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item theme-nav-button">
+                            <a class="nav-link theme-text" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item theme-nav-button">
+                                <a class="nav-link theme-text" asp-controller="LoginRedirect" asp-action="Dashboard">Dashboard</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item theme-nav-button">
+                                <a class="nav-link theme-text" asp-controller="Auth" asp-action="Login">Sign in/Sign up</a>
+                            </li>
+                        }
+
+                        <li class="nav-item theme-nav-button">
+                            <a class="nav-link theme-text" asp-controller="Home" asp-action="Pricing">Pricing</a>
+                        </li>
+                        <li class="nav-item theme-nav-button">
+                            <a class="nav-link theme-text" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="d-flex flex-grow-1 pb-3 w-100 justify-content-center">
+        @RenderBody()
+    </main>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

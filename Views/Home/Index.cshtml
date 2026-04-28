@@ -1,0 +1,57 @@
+﻿<div class="d-flex w-limit-90 justify-content-between gap-3 res-to-col">
+    @* "About us" div *@
+    <div id="about-div" class="theme-div theme-orange-3 p-3" style="max-width: 50%">
+        <h2 class="theme-text">About us</h2>
+        <p class="theme-text text">
+            Delwings is a delivery company that will transproprt your package from you to sender fast and for a low price. <br /><br />
+            All you need is just an account that you can create at <strong>Sign in/Sign up tab</strong> <br /><br />
+            After that, you can just carry things you want to transport to the nearest accept point <br /><br />
+            Our operators will add your order to the system and assign a track number to it <br /><br />
+            You can track your order with it <br />
+            After the package will be delievered, you will be notified and you can tell the receiver to take it from the nearest pick-up point <br /><br />
+        </p>
+    </div>
+    <div class="d-flex flex-column gap-3 flex-grow-1 justify-content-evenly">
+        @* Track an order div *@
+        <form method="get" asp-action="Index" asp-controller="Track">
+            <div class="d-flex theme-div theme-orange-2 p-3 flex-grow-1 justify-content-evenly res-to-col">
+                <div class="d-flex justify-content-center">
+                    <img src="~/css/svg/box.svg" style="max-width: 170px" />
+                </div>
+                <div class="d-flex flex-column align-items-center justify-content-evenly">
+                    <h3 class="theme-text">Track an order</h3>
+                    <div>
+                        <h6 class="theme-text">Package token</h6>
+                        <input class="theme-input" name="trackToken"/>
+                    </div>
+                    <button type="submit" class="theme-button theme-text mt-2">Track</button>
+                </div>
+            </div>
+        </form>
+        @* Calculator/Job div*@
+        <div class="d-flex theme-div theme-orange-4 p-3 gap-3 justify-content-evenly align-items-center res-to-col">
+            <form method="post" asp-action="Calculator">
+                <div class="d-flex flex-column justify-content-evenly align-items-center">
+                    <h3 class="theme-text">Calculate the cost</h3>
+                    <div>
+                        <h6 class="theme-text">From</h6>
+                        <input name="fromCity" class="theme-input" />
+                    </div>
+                    <div>
+                        <h6 class="theme-text">To</h6>
+                        <input name="toCity" class="theme-input" />
+                    </div>
+                    <button class="theme-button theme-text mt-2">Calculate cost</button>
+                </div>
+            </form>
+            @* Apply for a job div*@
+            <form method="get" asp-action="CourierLogin" asp-controller="Auth">
+                <div class="d-flex flex-column align-items-center justify-content-evenly">
+                    <h3 class="theme-text">Need a job?</h3>
+                    <img src="~/css/svg/job.svg" />
+                    <button class="theme-button theme-text mt-2">Apply as courier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

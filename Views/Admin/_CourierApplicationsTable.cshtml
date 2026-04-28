@@ -1,0 +1,43 @@
+﻿<div class="d-flex flex-column theme-div theme-orange-4 p-3 del_min_w" style="max-width: 1000px; min-width: 1000px;">
+    <div class="table-responsive" style="max-height: 400px;">
+        <table class="table table-warning table-sm text-center">
+            <thead class="fw-bold">
+                <tr>
+                    <td style="width: 5%;">Id</td>
+                    <td style="width: 15%;">Courier Id</td>
+                    <td>Name</td>
+                    <td>Surname</td>
+                    <td>Phone</td>
+                    <td>Control</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var courier in Model.CouriersApplicationsList)
+                {
+                    <tr>
+                        <td>@courier.Id</td>
+                        <td>@courier.CourierId</td>
+                        <td>@courier.Name</td>
+                        <td>@courier.Surname</td>
+                        <td>@courier.Phone</td>
+                        <td class="align-middle">
+                            <div class="d-flex justify-content-center gap-2">
+                                <form method="post" asp-action="AcceptCourier">
+                                    <input type="hidden" name="courierid" value="@courier.CourierId" />
+                                    <input type="hidden" name="applicationId" value="@courier.Id" />
+                                    <button class="theme-button theme-button-table">Accept</button>
+                                </form>
+
+                                <form method="post" asp-action="DeclineCourier">
+                                    <input type="hidden" name="courierId" value="@courier.CourierId" />
+                                    <input type="hidden" name="applicationId" value="@courier.Id" />
+                                    <button class="theme-button theme-button-table">Decline</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

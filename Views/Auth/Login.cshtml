@@ -1,0 +1,57 @@
+﻿<div class="d-flex flex-column align-items-center">
+    <h1 class="theme-text">Fast delivery, Reliable service</h1>
+    <div class="d-flex gap-5 align-items-center res-to-col flex-grow-1">
+        <form method="post" asp-action="Login">
+            <div class="theme-div d-flex flex-column flex-grow-1 theme-orange-2 p-3">
+                <h3 class="theme-text">Sign in</h3>
+
+                <h6 class="theme-text">Username</h6>
+                <input class="theme-input" name="login" />
+
+                <h6 class="theme-text">Password</h6>
+                <input type="password" autocomplete="off" class="theme-input" name="password" />
+
+                <button type="submit" class="theme-button theme-text mt-2">Log in</button>
+            </div>
+        </form>
+
+        <form method="post" asp-action="RegisterUser">
+            <div class="theme-div d-flex flex-column flex-grow-1 theme-orange-2 p-3 gap-1">
+                <h3 class="theme-text">Sign up</h3>
+
+                <div class="d-flex gap-2 res-to-col">
+                    <div class="d-flex flex-wrap flex-column justify-content-center gap-1">
+                        <h6 class="theme-text">Login</h6>
+                        <input class="theme-input" name="login" />
+
+                        <h6 class="theme-text">Name</h6>
+                        <input class="theme-input" name="name" />
+
+                        <h6 class="theme-text">Surname</h6>
+                        <input class="theme-input" name="surname" />
+                    </div>
+
+                    <div class="d-flex flex-wrap flex-column justify-content-center gap-1 align-self-end">
+
+                        <h6 class="theme-text">Phone</h6>
+                        <input class="theme-input" name="phone" />
+
+                        <h6 class="theme-text">E-mail</h6>
+                        <input class="theme-input" name="email" />
+                    </div>
+
+                    <div class="d-flex flex-wrap flex-column justify-content-center gap-1 align-self-end">
+
+                        <h6 class="theme-text">Password</h6>
+                        <input type="password" autocomplete="off" class="theme-input" name="password" />
+
+                        <h6 class="theme-text">Confirm password</h6>
+                        <input type="password" autocomplete="off" class="theme-input" name="passwordConfirm" />
+                    </div>
+                </div>
+
+                <button type="submit" class="theme-button theme-text mt-2">Register</button>
+            </div>
+        </form>
+    </div>
+</div>

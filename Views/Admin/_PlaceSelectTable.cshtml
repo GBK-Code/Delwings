@@ -1,0 +1,39 @@
+﻿<div class="d-flex flex-column theme-div theme-orange-4 p-3 del_min_w" style="max-width: 1000px; min-width: 1000px;">
+    <h3 class="theme-text">Assign a Place</h3>
+
+    <div class="table-responsive" style="max-height: 150px;">
+        <table class="table table-warning table-sm text-center">
+            <thead class="fw-bold">
+                <tr>
+                    <td style="width: 5%;">Id</td>
+                    <td>Type</td>
+                    <td>Country</td>
+                    <td>City</td>
+                    <td>Address</td>
+                    <td>Contact</td>
+                    <td>Assign</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var place in Model.PlacesList)
+                {
+                    <tr>
+                        <td>@place.Id</td>
+                        <td>@place.Type</td>
+                        <td>@place.Country</td>
+                        <td>@place.City</td>
+                        <td>@place.Address</td>
+                        <td>@place.Contact</td>
+                        <td>
+                            <label class="theme-radio">
+                                <input type="radio" name="placeId" value="@place.Id" required />
+                                <span class="theme-inner-radio"></span>
+                                <span>Assign</span>
+                            </label>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

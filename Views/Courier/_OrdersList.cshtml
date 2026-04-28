@@ -1,0 +1,19 @@
+﻿@model Delwings.Models.CourierProfileVM;
+
+
+<div class="theme-div theme-orange-2 p-3">
+    @foreach (var order in Model.CourierOrders)
+    {
+        var fromPlace = Model.FromPlacesList.Where(from => from.Id == order.FromPlaceId).First();
+        var toPlace = Model.ToPlacesList.Where(to => to.Id == order.ToPlaceId).First();
+
+        <div class="d-flex theme-orange-3 p-3 gap-4">
+            <img src="~/css//svg/box.svg" class="flex-grow-0" style="max-width: 80px;" />
+            <div>
+                <h2 class="theme-text">Order   ID: @order.OrderId</h2>
+                <p class="theme-text">From: @fromPlace.Country, @fromPlace.City, @fromPlace.Address</p>
+                <p class="theme-text">To: @toPlace.Country, @toPlace.City, @toPlace.Address</p>
+            </div>
+        </div>
+    }
+</div>

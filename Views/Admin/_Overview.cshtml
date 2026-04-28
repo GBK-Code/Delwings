@@ -1,0 +1,10 @@
+﻿<div class="d-flex flex-grow-1 theme-div theme-orange-2 p-3 justify-content-evenly mw-100">
+    <img src="~/css//svg/job.svg" class="flex-shrink-0" style="max-width: 150px; height: auto" />
+    <div>
+        <h1>@Model.Me.Name @Model.Me.Surname[0].</h1>
+
+        <form method="post" asp-action="Logout">
+            <button type="submit" class="theme-button">Logout</button>
+        </form>
+    </div>
+</div>

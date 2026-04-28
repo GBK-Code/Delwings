@@ -1,0 +1,47 @@
+﻿@model Delwings.Models.AdminPageVM;
+
+<div class="d-flex flex-column w-limit-90 gap-2">
+    <h1 class="theme-text">Administrative Panel</h1>
+
+    <div class="d-flex align-items-start gap-4 res-to-col">
+        @* Tabs *@
+        <partial name="_TabsCard" />
+
+        @if (Model.Tab == "overview")
+        {
+            <partial name="_Overview" />
+        }
+
+        @if (Model.Tab == "couriers")
+        {
+            <div class="d-flex flex-column w-100 mw-100">
+                <h1 class="theme-text">Couriers' applications</h1>
+
+                @* Couriers panel*@
+                <partial name="_CourierApplicationsTable" />
+            </div>
+        }
+
+        @if (Model.Tab == "operators")
+        {
+            <div class="d-flex flex-column gap-3 mw-100">
+                @* Operators panel *@
+
+                @* Add operator *@
+                <partial name="_OperatorRegistrationCard" />
+
+                @* List of operators *@
+                <partial name="_OperatorListCard" />
+            </div>
+        }
+
+        @if (Model.Tab == "tables")
+        {
+            <div class="mw-100">
+                <partial name="_OperatorListCard" />
+            </div>
+        }
+
+    </div>
+
+</div>

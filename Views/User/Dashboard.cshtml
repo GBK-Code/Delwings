@@ -1,0 +1,56 @@
+﻿@model Delwings.Models.UserProfileVM;
+
+<div class="d-flex flex-column gap-3">
+    <h1 class="theme-text">Dashboard</h1>
+
+    <div class="d-flex theme-div theme-orange-2 p-3 w-limit-90 justify-content-evenly">
+        <img src="~/css//svg/job.svg" class="flex-shrink-0" style="max-width: 150px; height: auto"/>
+        <div>
+            <h3 class="theme-text">Name: @Model.Me.Name, @Model.Me.Surname</h3>
+            <div class="d-flex gap-5 flex-wrap">
+                <h4 class="theme-text">Login: @Model.Me.Login</h4>
+                <h4 class="theme-text">ID: @Model.Me.Id</h4>
+            </div>
+            <div>
+                <p class="theme-text">@Model.Me.Phone</p>
+                <p class="theme-text text-break">Email: @Model.Me.Email</p>
+            </div>
+
+            <form method="post" asp-action="Logout">
+                <button type="submit" class="theme-button">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <h1 class="theme-text">My Orders</h1>
+
+    @for (int i= 0;i < Model.CourierList.Count;i++)
+    {
+        var order = Model.MyOrdersList[i];
+        var courier = Model.CourierList[i];
+        <div class="theme-div theme-orange-2 p-3">
+            <form method="get" asp-action="Index" asp-controller="Track">
+                <input type="hidden" name="trackToken" value="@order.TrackId" />
+                <div class="d-flex gap-2 res-to-col align-content-center">
+                    <h3 class="theme-text">Order ID: @order.Id</h3>
+                    <p class="theme-text">Track ID: @order.TrackId</p>
+                    <button class="theme-button theme-text">Track</button>
+                </div>
+            </form>
+            <p class="theme-text">Destination: @order.Destination</p>
+            <p class="theme-text">@order.Date @order.Time</p>
+            <div class="d-inline-flex gap-2 mt-3 res-to-col">
+                <p class="theme-text">Order type: @order.OrderType</p>
+                @if (order.OrderType == Delwings.Models.Enums.OrderTypes.Express)
+                {
+                    <p class="theme-text">Courier name: @courier.Name</p>
+                }
+                @if (order.OrderType == Delwings.Models.Enums.OrderTypes.Insured)
+                {
+                    <p class="theme-text">Insurance company: @order.InsuranceCompany</p>
+                    <p class="theme-text">Insurance price: @order.InsurancePrice</p>
+                }
+            </div>
+        </div>
+    }
+</div>

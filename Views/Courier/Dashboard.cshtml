@@ -1,0 +1,58 @@
+﻿@model Delwings.Models.CourierProfileVM;
+
+
+<div class="d-flex flex-column w-limit-90 gap-2">
+    <h1 class="theme-text">Courier Dashboard</h1>
+
+    <div class="d-flex align-items-start gap-4 res-to-col">
+
+        <partial name="_TabsCard" />
+
+        @if (Model.Tab == "overview")
+        {
+            <partial name="_Overview" />
+        }
+
+        @if (Model.Tab == "orders")
+        {
+            @if (Model.Status == Delwings.Models.Enums.CourierStatuses.Pending)
+            {
+                <h1 class="theme-text">Your application is under review. Please, contact the recruiter</h1>
+            }
+            @if (Model.Status == Delwings.Models.Enums.CourierStatuses.Declined)
+            {
+                <h1 class="theme-text">Sorry, your application was declined and will be removed</h1>
+            }
+
+            @if (Model.Status == Delwings.Models.Enums.CourierStatuses.Accepted)
+            {
+                <div class="mw-100">
+                    <h1 class=theme-text>List of Orders</h1>
+
+                    <partial name="_OrdersList" />
+                </div>
+            }
+        }
+
+        @if (Model.Tab == "stats")
+        {
+            @if (Model.Status == Delwings.Models.Enums.CourierStatuses.Pending)
+            {
+                <h1 class="theme-text">Your application is under review. Please, contact the recruiter</h1>
+            }
+
+            @if (Model.Status == Delwings.Models.Enums.CourierStatuses.Declined)
+            {
+                <h1 class="theme-text">Sorry, your application was declined and will be removed</h1>
+            }
+
+            @if (Model.Status == Delwings.Models.Enums.CourierStatuses.Accepted)
+            {
+                <div class="mw-100">
+                    <partial name="_StatisticsCard" />
+                </div>
+            }
+        }
+    </div>
+</div>
+

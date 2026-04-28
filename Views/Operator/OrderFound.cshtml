@@ -1,0 +1,26 @@
+﻿@model Delwings.Models.Order;
+
+<div class="w-limit-90">
+    <div class="d-flex theme-div theme-orange-2 flex-grow-0">
+        <img src="~/css/svg/box.svg" style="max-width: 200px;" />
+
+        <div class="d-flex flex-column w-100">
+            <div class="d-flex flex-wrap gap-5">
+                <div>
+                    <h3 class=theme-text>Order ID: @Model.Id</h3>
+                    <h3 class="theme-text">@Model.Date @Model.Time</h3>
+                </div>
+
+                <div>
+                    <h3 class="theme-text">Sender ID: @Model.SenderId</h3>
+                    <h3 class="theme-text">To: @Model.Destination</h3>
+                </div>
+            </div>
+
+            <form method="post" asp-action="DeleteOrder">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button class="theme-button theme-text flex-grow-1">The package is given</button>
+            </form>
+        </div>
+    </div>
+</div>

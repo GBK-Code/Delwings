@@ -1,0 +1,39 @@
+﻿@model Delwings.Models.Calculator;
+
+<div class="w-limit-90">
+    <h1 class="theme-text">Calculator</h1>
+    <div class="d-flex justify-content-evenly">
+        <div class="d-flex flex-column gap-3">
+            <div class="d-flex theme-div theme-orange-2 flex-grow-0 gap-2 p-3">
+                <img src="~/css/svg/city.svg" style="max-width: 50px;" />
+
+                <div>
+                    <h3 class="theme-text">From city: @Model.fromCity</h3>
+                    <p class="theme-text">Coordinate: @Model.fromLat @Model.fromLon</p>
+                </div>
+
+            </div>
+
+            <div class="d-flex theme-div theme-orange-2 flex-grow-0 gap-2 p-3">
+                <img src="~/css/svg/city.svg" style="max-width: 50px;" />
+
+                <div>
+                    <h3 class="theme-text">To city: @Model.toCity</h3>
+                    <p class="theme-text">Coordinate: @Model.toLat @Model.toLon</p>
+                </div>
+
+            </div>
+        </div>
+    
+        <div class="theme-div theme-orange-2 p-3 align-self-start">
+            <h3 class="theme-text">Distance: @Model.dist</h3>
+            <h3 class="theme-text">Price:</h3>
+            <ol>
+                <li class="theme-text">S-package: @(Model.dist * 2 + 400) T</li>
+                <li class="theme-text">M-package: @(Model.dist * 2 + 550) T</li>
+                <li class="theme-text">L-package: @(Model.dist * 2 + 700) T</li>
+            </ol>
+        </div>
+    </div>
+</div>
+

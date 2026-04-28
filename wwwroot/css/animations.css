@@ -1,0 +1,35 @@
+﻿@keyframes changingText
+{
+
+}
+
+.animated-text
+{
+    position: relative;
+    height: 60px;
+    /*overflow: hidden;*/
+}
+
+.animated-text h1 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    animation: changingText 6s infinite;
+}
+
+#slogan1
+{
+    animation-delay: 0s;
+    opacity: 0;
+}
+
+#slogan2 {
+    animation-delay: 4s;
+    opacity: 0;
+}
+
+#slogan3
+{
+    animation-delay: 8s;
+}

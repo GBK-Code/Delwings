@@ -1,0 +1,17 @@
+﻿<div class="d-flex theme-div theme-orange-2 p-3 w-limit-90 justify-content-evenly">
+    <img src="~/css//svg/job.svg" class="flex-shrink-0" style="max-width: 150px; height: auto" />
+    <div>
+        <h3 class="theme-text">Name: @Model.Me.Name, @Model.Me.Surname</h3>
+        <h4 class="theme-text">Login: @Model.Me.Login</h4>
+        <p class="theme-text">Work at: @Model.WorkingPlace.Country, @Model.WorkingPlace.City, @Model.WorkingPlace.Address</p>
+        <p class="theme-text">@Model.WorkingPlace.Type</p>
+        <div>
+            <p class="theme-text">@Model.Me.Phone</p>
+            <p class="theme-text">Email: @Model.Me.Email</p>
+        </div>
+
+        <form method="post" asp-action="Logout">
+            <button type="submit" class="theme-button">Logout</button>
+        </form>
+    </div>
+</div>

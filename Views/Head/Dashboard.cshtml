@@ -1,0 +1,57 @@
+﻿@model Delwings.Models.HeadPageVM;
+
+
+<div class="d-flex flex-column w-limit-90 gap-2">
+    <h1 class="theme-text">Main Administrative Panel</h1>
+
+    <div class="d-flex align-items-start gap-4 res-to-col">
+        @* Tabs *@
+        <partial name="_TabsCard" />
+
+        @if (Model.Tab == "overview")
+        {
+            <partial name="_Overview" />
+        }
+
+        @if (Model.Tab == "admins")
+        {
+            <div class="mw-100">
+                <div class="d-flex flex-column w-100 gap-4">
+                    @* Add Admin *@
+                    <partial name="_AdminRegistrationCard" />
+                    @* Admin List *@
+                    <partial name="_AdminListCard" />
+                </div>
+            </div>
+        }
+
+        @if (Model.Tab == "places")
+        {
+            <div class="mw-100">
+                @* Places section *@
+
+                <div class="d-flex flex-column w-100 gap-4">
+                    @* Add Place *@
+                    <partial name="_AddPlaceCard" />
+
+                    @* Place list *@
+                    <partial name="_PlaceListCard" />
+                </div>
+            </div>
+        }
+
+        @if (Model.Tab == "tables")
+        {
+            <div class="d-flex flex-column flex-grow-1 gap-2 mw-100">
+
+                @* Admin List *@
+                <partial name="_AdminListCard" />
+
+                @* Place List*@
+                <partial name="_PlaceListCard" />
+            </div>
+        }
+
+    </div>
+</div>
+

@@ -1,0 +1,78 @@
+﻿@model Delwings.Models.OperatorPageVM;
+
+<div class="d-flex flex-column w-limit-90 gap-2">
+    <h1 class="theme-text">Operator Panel</h1>
+
+    <div class="d-flex align-items-start gap-4 res-to-col">
+        @* Tabs *@
+        <partial name="_TabsCard" />
+
+        @if (Model.Tab == "overview")
+        {
+            <partial name="_Overview" />
+        }
+        
+        @if (Model.Tab == "redirection")
+        {
+            <div class="mw-100">
+                <partial name="_RedirectionCard" />
+            </div>
+        }
+
+        @if (Model.Tab == "orders")
+        {
+            <div class="d-flex flex-column mw-100 gap-4">
+                @if (Model.WorkingPlace.Type == Delwings.Models.Enums.PlaceTypes.AcceptPoint)
+                {
+                    <partial name="_AddOrderCard" />
+                }
+    
+                @if (Model.WorkingPlace.Type == Delwings.Models.Enums.PlaceTypes.PickUpPoint)
+                {
+                    <partial name="_ReleaseOrderCard" />
+                }
+
+                <partial name="_OrdersListCard" />
+            </div>
+        }
+
+        @if (Model.Tab == "tables")
+        {
+            <div class="mw-100">
+                <partial name="_OrdersListCard" />
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    const orderTypeRadios = document.querySelectorAll('input[name="orderType"]');
+    const expressFields = document.getElementById('expressFields');
+    const insuranceFields = document.getElementById('insuranceFields');
+    const courierRadios = document.querySelectorAll('input[name="courierId"]')
+
+    function updateFields() {
+        const selected = document.querySelector('input[name="orderType"]:checked').value;
+
+        expressFields.classList.add('d-none');
+        insuranceFields.classList.add('d-none');
+
+        if (selected === 'ExpressOrder') {
+            expressFields.classList.remove('d-none');
+            courierRadios.forEach(r => r.required = true);
+           
+        } else if (selected === 'InsuredOrder') {
+            insuranceFields.classList.remove('d-none');
+            courierRadios.forEach(r => {
+                r.required = false;
+                r.checked = false;
+            });
+        }
+    }
+
+    orderTypeRadios.forEach(radio => {
+        radio.addEventListener('change', updateFields);
+    });
+
+    updateFields();
+</script>

@@ -1,0 +1,69 @@
+﻿@model Delwings.Models.AdminPageVM;
+
+
+<div class="d-flex flex-column theme-div theme-orange-4 p-3 del_min_w" style="max-width: 1000px; min-width: 1000px;">
+    <h3 class="theme-text">List of Operators</h3>
+
+    <div class="table-responsive" style="max-height: 150px;">
+        <table class="table table-warning table-sm text-center">
+            <thead class="fw-bold">
+                <tr>
+                    <td style="width: 5%;">Id</td>
+                    <td>Login</td>
+                    <td>Name</td>
+                    <td>Surname</td>
+                    <td>Phone</td>
+                    <td>Email</td>
+                    <td>Password</td>
+                    <td>Place</td>
+                    <td>Place Type</td>
+                    <td>Control</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var oper in Model.OperatorsList)
+                {
+                    <tr>
+                        <td>@oper.Id</td>
+                        <td>@oper.Login</td>
+                        <td>@oper.Name</td>
+                        <td>@oper.Surname</td>
+                        <td>@oper.Phone</td>
+                        <td>@oper.Email</td>
+                        <td>@oper.Password</td>
+                        @{
+                            var operatoPlace = Model.OperatorPlacesList.Where(place => place.OperatorId == oper.Id).First();
+                            int operatroPlaceId = operatoPlace.PlaceId;
+
+                            var placeList = Model.PlacesList.Where(place => place.Id == operatroPlaceId);
+                            if (placeList.Count() > 0)
+                            {
+                                var place = placeList.First();
+                                <td>@place.Country, @place.City, @place.Address</td>
+                                <td>@place.Type</td>
+                            }
+                            else
+                            {
+                                <form method="post" asp-action="AssignEmptySpace">
+                                    <input type="hidden" name="operatorId" value="@oper.Id" />
+                                    <td>
+                                        <input name="placeId" class="theme-input" placeholder="PlaceID to assign" required />
+                                    </td>
+                                    <td>
+                                        <button class="theme-button theme-button-table">Assign</button>
+                                    </td>
+                                </form>
+                            }
+                        }
+                        <td>
+                            <form method="post" asp-action="DeleteOperator">
+                                <input type="hidden" name="id" value="@oper.Id" />
+                                <button class="theme-button theme-button-table">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
