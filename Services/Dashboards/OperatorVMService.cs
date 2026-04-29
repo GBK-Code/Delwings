@@ -67,7 +67,7 @@ namespace Delwings.Services.Dashboards
         {
             OrderTypes type = request.OrderType;
 
-            Order orderData = await _ordersService.BuildOrder(request);
+            Order orderData = _ordersService.BuildOrder(request);
             Account? courier = null;
 
             if (request.CourierId != null)

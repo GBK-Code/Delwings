@@ -12,12 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Admin role
-builder.Services.AddAuthentication("Cookies") // схема по умолчанию
+builder.Services.AddAuthentication("Cookies")
     .AddCookie("Cookies", options =>
     {
-        options.LoginPath = "/Auth/Login";        // если не авторизован — редирект на форму
-        options.AccessDeniedPath = "/Home/AccessDenied"; // если нет прав
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Home/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     });
 
 // Add database context
@@ -34,10 +34,13 @@ builder.Services.Configure<ApiSettings>
 builder.Services.AddHttpClient<ApiService>();
 
 builder.Services.AddScoped<AccountRegistrationService>();
+builder.Services.AddScoped<OrderTokensGenerator>();
 
 // Dashboards
 builder.Services.AddScoped<HeadDashboardService>();
 builder.Services.AddScoped<AdminDashboardService>();
+builder.Services.AddScoped<OperatorVMService>();
+builder.Services.AddScoped<CourierDashboardService>();
 
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<OrdersService>();
