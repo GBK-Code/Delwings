@@ -9,6 +9,7 @@ namespace Delwings.Models.Requests
         public string? Time { get; set; }
         public int SenderId { get; set; }
         public string? TrackId { get; set; }
+        public int ReceiverNumber { get; set; }
         public string? Destination { get; set; }
         public string? Contact { get; set; }
         public int CurrentPlaceId { get; set; }

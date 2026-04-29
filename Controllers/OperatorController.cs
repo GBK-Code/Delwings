@@ -1,5 +1,4 @@
 ﻿using Delwings.Models;
-using Delwings.Models.Enums;
 using Delwings.Models.Requests;
 using Delwings.Services;
 using Delwings.Services.Dashboards;
@@ -13,38 +12,43 @@ namespace Delwings.Controllers
     public class OperatorController: Controller
     {
         private readonly OrdersService _ordersService;
-        private readonly CourierOrdersService _courierOrdersService;
         private readonly OperatorVMService _operatorVMService;
+        private readonly DeliveryService _deliveryService;
         
         public OperatorController 
             (
                 OrdersService ordersService,
-                CourierOrdersService courierOrdersService,
-                OperatorVMService operatorVMService
+                OperatorVMService operatorVMService,
+                DeliveryService deliveryService
             )
         {
             _ordersService = ordersService;
-            _courierOrdersService = courierOrdersService;
             _operatorVMService = operatorVMService;
+            _deliveryService = deliveryService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Dashboard(string tab)
         {
-            var identityName = User.Identity?.Name;
+            string? identityName = User.Identity?.Name;
             if (string.IsNullOrEmpty(identityName)) { return RedirectToAction("AccessDenied", "Home"); }
 
-            var viewModel = _operatorVMService.BuildDashboard(tab, identityName);
+            OperatorPageVM? viewModel = await _operatorVMService.BuildDashboard(tab, identityName);
             if (viewModel == null) { return RedirectToAction("AccessDenied", "Home"); }
 
             return View(viewModel);
         }
+
+        [HttpGet]
         public async Task<IActionResult> OrderFound(int orderId)
         {
-            var order = await _ordersService.GetOrderByIdAsync(orderId);
+            Order? order = await _ordersService.GetOrderByIdAsync(orderId);
             if (order == null) { return RedirectToAction("BadReq", "Home"); }
 
             return View(order);
         }
+
+        [HttpGet]
         public async Task<IActionResult> EditOrder(OrderRequest request)
         {
             EditOrderPAgeVM? viewModel = await _operatorVMService.BuildEditOrderPage(request);
@@ -53,59 +57,54 @@ namespace Delwings.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
         public async Task<IActionResult> SubmitEdit(OrderRequest request)
         {
-            var orderData = await _ordersService.BuildOrder(request);
+            Order orderData = _ordersService.BuildOrder(request);
             await _ordersService.UpdateOrderAsync(orderData.Id, orderData);
 
             return RedirectToAction("Dashboard", new { tab = "orders"} );
         }
 
+        [HttpPost]
         public async Task<IActionResult> AddOrder(OrderRequest request)
         {
             await _ordersService.CreateOrderAsync(request);
             return RedirectToAction("Dashboard", new { tab = "orders" });
         }
 
+        [HttpPost]
         public async Task<IActionResult> DeleteOrder(int orderId)
         {
-            await _ordersService.DeleteOrderAsync(orderId);
+            bool success = await _ordersService.DeleteOrderAsync(orderId);
+            if (!success) { return RedirectToAction("BadReq", "Home"); }
+
             return RedirectToAction("Dashboard", new { tab = "orders" });
         }
 
+        [HttpGet]
         public async Task<IActionResult> ReleaseOrder(int receiverNumber)
         {
-            var order = await _ordersService.GetOrderByReceiverNumberAsync(receiverNumber);
+            Order? order = await _ordersService.GetOrderByReceiverNumberAsync(receiverNumber);
             if (order == null) { return RedirectToAction("BadReq", "Home"); }
 
             return RedirectToAction("OrderFound", "Operator", new { orderId = order.Id});
         }
 
+        [HttpPost]
         public async Task<IActionResult> AssignOrderPlace(string trackId, int placeId)
         {
-            var order = await _ordersService.GetOrderByTrackIdAsync(trackId);
-            if (order == null) { RedirectToAction("Dashboard", "Operator"); }
-
-            order.CurrentLocationId = placeId;
-            await _ordersService.UpdateOrderAsync(order.Id, order);
+            bool success = await _ordersService.ReassignOrderPlaceAsync(trackId, placeId);
+            if (!success) { return RedirectToAction("BadReq", "Home"); }
 
             return RedirectToAction("Dashboard", new { tab = "orders" });
         }
 
+        [HttpPost]
         public async Task<IActionResult> RedirectCourier(int orderId, int courierId, int placeId)
         {
-            var order = await _ordersService.GetOrderByIdAsync(orderId);
-            if (order == null) { return RedirectToAction("BadReq", "Home"); }
-
-            await _courierOrdersService.CreateCourierOrderAsync(new CourierOrder
-            {
-                CourierId = courierId,
-                FromPlaceId = order.CurrentLocationId,
-                ToPlaceId = placeId,
-                OrderId = orderId
-            });
-                
-            await _ordersService.UpdateOrderAsync(order.Id, order);
+            bool success = await _deliveryService.RedirectCourier(orderId, courierId, placeId);
+            if (!success) { return RedirectToAction("BadReq", "Home"); }
 
             return RedirectToAction("Dashboard", new { tab = "redirection" });
         }

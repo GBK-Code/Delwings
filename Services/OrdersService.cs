@@ -32,24 +32,16 @@ namespace Delwings.Services
         public async Task<Order?> GetOrderByTrackIdAsync(string trackID) => await _repo.GetOrderByTrackIdAsync(trackID);
         public async Task<Order?> GetOrderByReceiverNumberAsync(int receiverNumber) => await _repo.GetOrderByReceiverNumberAsync(receiverNumber);
 
-        public async Task<Order> BuildOrder(OrderRequest request)
+        public Order BuildOrder(OrderRequest request)
         {
-            string? trackId = request.TrackId;
-            int receiverNumber = _tokenGenerator.GenerateReceiverNumber();
-
-            if (request.TrackId == null)
-            {
-                trackId = _tokenGenerator.GenerateTrackId();
-            }
-
             Order order = new Order()
             {
                 Id = request.Id,
                 OrderType = request.OrderType,
                 Date = request.Date,
                 Time = request.Time,
-                TrackId = trackId,
-                ReceiverNumber = receiverNumber,
+                TrackId = request.TrackId,
+                ReceiverNumber = request.ReceiverNumber,
                 SenderId = request.SenderId,
                 IsCarried = false,
                 ReceiverContact = request.Contact,
@@ -62,9 +54,25 @@ namespace Delwings.Services
 
             return order;
         }
+
+        public async Task<bool> ReassignOrderPlaceAsync(string trackId, int placeId)
+        {
+            Order? order = await GetOrderByTrackIdAsync(trackId);
+            if (order == null) { return false; }
+
+            order.CurrentLocationId = placeId;
+
+            var success = await UpdateOrderAsync(order.Id, order);
+            if (!success) { return false; }
+
+            return true;
+        }
+
         public async Task<int> CreateOrderAsync(OrderRequest request)
         {
-            Order order = await BuildOrder(request);
+            Order order = BuildOrder(request);
+            order.TrackId = _tokenGenerator.GenerateTrackId();
+            order.ReceiverNumber = _tokenGenerator.GenerateReceiverNumber();
 
             await _repo.AddOrderAsync(order);
             await _repo.SaveChangesAsync();
