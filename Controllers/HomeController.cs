@@ -1,9 +1,8 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Delwings.Models;
 using Delwings.Services;
 using System.Diagnostics;
-using System.Security.Claims;
+
 
 namespace Delwings.Controllers
 {
@@ -11,11 +10,13 @@ namespace Delwings.Controllers
     {
         private readonly OrdersService _ordersService;
         private readonly ApiService _apiService;
+        private readonly CalculatorService _calculatorService;
 
-        public HomeController(OrdersService ordersService, ApiService apiService) 
+        public HomeController(OrdersService ordersService, ApiService apiService, CalculatorService calculatorService) 
         { 
             _ordersService = ordersService;
             _apiService = apiService;
+            _calculatorService = calculatorService;
         }
 
         public IActionResult Index()
@@ -43,33 +44,10 @@ namespace Delwings.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Calculator(string fromCity, string toCity)
+        public async Task<IActionResult> CalculatorPage(string fromCity, string toCity)
         {
-            if (fromCity == null || toCity == null) { return RedirectToAction("BadReq", "Home"); }
-            var coordinates = await _apiService.GetPointsAsync(fromCity, toCity);
-
-            if (coordinates == null) { return RedirectToAction("BadReq", "Home"); }
-
-            double fromLat = coordinates["fromLat"];
-            double toLat = coordinates["toLat"];
-            double fromLon = coordinates["fromLon"];
-            double toLon = coordinates["toLon"];
-
-            double deltaLat = fromLat - toLat;
-            double deltaLon = fromLon - toLon;
-
-            double dist = Math.Sqrt(Math.Pow(deltaLat, 2) + Math.Pow(deltaLon, 2));
-
-            var calculatorModel = new Calculator
-            {
-                fromLat = fromLat,
-                toLat = toLat,
-                fromLon = fromLon,
-                toLon = toLon,
-                fromCity = fromCity,
-                toCity = toCity,
-                dist = Math.Round(dist * 111, 2)
-            };
+            Calculator? calculatorModel = await _calculatorService.BuildModel(fromCity, toCity);
+            if (calculatorModel == null) { return BadReq(); }
 
             return View(calculatorModel);
         }
@@ -87,7 +65,6 @@ namespace Delwings.Controllers
 
             return RedirectToAction("Index", "Orders", new { trackId });
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

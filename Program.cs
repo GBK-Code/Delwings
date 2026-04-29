@@ -35,6 +35,7 @@ builder.Services.AddHttpClient<ApiService>();
 
 builder.Services.AddScoped<AccountRegistrationService>();
 builder.Services.AddScoped<OrderTokensGenerator>();
+builder.Services.AddScoped<CalculatorService>();
 
 // Dashboards
 builder.Services.AddScoped<HeadDashboardService>();
@@ -42,6 +43,7 @@ builder.Services.AddScoped<AdminDashboardService>();
 builder.Services.AddScoped<OperatorVMService>();
 builder.Services.AddScoped<CourierDashboardService>();
 builder.Services.AddScoped<UserDashboardService>();
+builder.Services.AddScoped<TrackPageService>();
 
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<OrdersService>();
