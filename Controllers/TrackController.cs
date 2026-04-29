@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Delwings.Services;
-using Delwings.Models;
 using Microsoft.AspNetCore.Authorization;
 using Delwings.Services.Dashboards;
+using Delwings.Models.ViewModels;
 
 namespace Delwings.Controllers
 {
@@ -39,7 +39,7 @@ namespace Delwings.Controllers
         [Authorize(Roles = "Courier")]
         public async Task<IActionResult> CourierConfirm(int orderId, int courierId, string trackId)
         {
-            bool success = await _deliveryService.CourierConfirm(orderId, courierId, trackId);
+            bool success = await _deliveryService.CourierConfirm(orderId, courierId);
             if (!success) { return RedirectToAction("BadReq", "Home"); }
 
             return RedirectToAction("Index", "Track", new {trackToken = trackId});

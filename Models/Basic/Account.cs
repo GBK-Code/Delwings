@@ -1,6 +1,6 @@
 ﻿using Delwings.Models.Enums;
 
-namespace Delwings.Models
+namespace Delwings.Models.Basic
 {
     public class Account
     {

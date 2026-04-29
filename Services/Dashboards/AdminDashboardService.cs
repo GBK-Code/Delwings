@@ -1,5 +1,5 @@
-﻿using Delwings.Models;
-using Delwings.Models.Enums;
+﻿using Delwings.Models.Enums;
+using Delwings.Models.ViewModels;
 
 namespace Delwings.Services.Dashboards
 {

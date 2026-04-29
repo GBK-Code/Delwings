@@ -1,4 +1,4 @@
-﻿using Delwings.Models;
+﻿using Delwings.Models.Basic;
 using Delwings.Models.Enums;
 using Delwings.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -30,6 +30,7 @@ namespace Delwings.Services
             newData.Status = status;
 
             await _repository.UpdateApplicationAsync(newData);
+            await _repository.SaveChangesAsync();
             return true;
         }
 

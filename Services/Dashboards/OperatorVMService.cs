@@ -1,6 +1,7 @@
-﻿using Delwings.Models;
+﻿using Delwings.Models.Basic;
 using Delwings.Models.Enums;
 using Delwings.Models.Requests;
+using Delwings.Models.ViewModels;
 
 
 namespace Delwings.Services.Dashboards
@@ -12,6 +13,7 @@ namespace Delwings.Services.Dashboards
         private readonly OperatorPlacesService _operatorPlacesService;
         private readonly PlaceService _placeService;
         private readonly CourierOrdersService _courierOrdersService;
+        private readonly CourierApplicationService _courierApplicationService;
 
         public OperatorVMService 
             (
@@ -19,7 +21,8 @@ namespace Delwings.Services.Dashboards
                 OrdersService ordersService, 
                 OperatorPlacesService operatorPlacesService, 
                 PlaceService placeService, 
-                CourierOrdersService courierOrdersService
+                CourierOrdersService courierOrdersService,
+                CourierApplicationService courierApplicationService
             )
         {
             _accountService = accountService;
@@ -27,12 +30,24 @@ namespace Delwings.Services.Dashboards
             _operatorPlacesService = operatorPlacesService;
             _placeService = placeService;
             _courierOrdersService = courierOrdersService;
+            _courierApplicationService = courierApplicationService;
         }
 
         public async Task<OperatorPageVM?> BuildDashboard(string tab, string identityName)
         {
             var courierList = await _accountService.GetAllAccountsAsync();
             courierList = courierList.Where(user => user.Role == AccountRoles.Courier).ToList();
+
+            List<Account> acceptedCouriers = new List<Account>();
+
+            foreach (var account in courierList)
+            {
+                CourierStatuses courierStatus = await _courierApplicationService.GetStatusByCourierIdAsync(account.Id);
+                if (courierStatus == CourierStatuses.Accepted)
+                {
+                    acceptedCouriers.Add(account);
+                }
+            }
 
             var oper = await _accountService.GetAccountByLoginAsync(identityName);
             if (oper == null) { return null; }
@@ -56,7 +71,7 @@ namespace Delwings.Services.Dashboards
                 OrdersList = orders.ToList(),
                 WorkingPlace = workingPlace,
                 PlacesList = places.ToList(),
-                CourierList = courierList,
+                AcceptedCourierList = acceptedCouriers,
                 CourierOrders = courierOrders
             };
 

@@ -1,6 +1,7 @@
-﻿using Delwings.Models.Enums;
+﻿using Delwings.Models.Basic;
+using Delwings.Models.Enums;
 
-namespace Delwings.Models
+namespace Delwings.Models.ViewModels
 {
     public class CourierProfileVM
     {

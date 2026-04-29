@@ -1,6 +1,7 @@
-﻿using Delwings.Models;
+﻿using Delwings.Models.Basic;
 using Delwings.Models.Enums;
 using Delwings.Models.Results;
+using Delwings.Models.ViewModels;
 using System.Security.Claims;
 
 namespace Delwings.Services.Dashboards

@@ -1,5 +1,5 @@
 using Delwings.Context;
-using Delwings.Models;
+using Delwings.Models.Basic;
 using Delwings.Repositories;
 using Delwings.Repositories.Interfaces;
 using Delwings.Services;
@@ -36,6 +36,8 @@ builder.Services.AddHttpClient<ApiService>();
 builder.Services.AddScoped<AccountRegistrationService>();
 builder.Services.AddScoped<OrderTokensGenerator>();
 builder.Services.AddScoped<CalculatorService>();
+builder.Services.AddScoped<LoginService>();
+builder.Services.AddScoped<DeliveryService>();
 
 // Dashboards
 builder.Services.AddScoped<HeadDashboardService>();

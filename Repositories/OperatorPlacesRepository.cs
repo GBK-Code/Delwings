@@ -1,7 +1,7 @@
-﻿using Delwings.Models;
-using Delwings.Context;
+﻿using Delwings.Context;
 using Delwings.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Delwings.Models.Basic;
 
 namespace Delwings.Repositories
 {

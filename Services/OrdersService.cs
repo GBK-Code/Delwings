@@ -1,4 +1,5 @@
 ﻿using Delwings.Models;
+using Delwings.Models.Basic;
 using Delwings.Models.Requests;
 using Delwings.Repositories.Interfaces;
 
@@ -71,7 +72,8 @@ namespace Delwings.Services
         public async Task<int> CreateOrderAsync(OrderRequest request)
         {
             Order order = BuildOrder(request);
-            order.TrackId = _tokenGenerator.GenerateTrackId();
+            if (request.TrackId == null) { order.TrackId = _tokenGenerator.GenerateTrackId(); }
+
             order.ReceiverNumber = _tokenGenerator.GenerateReceiverNumber();
 
             await _repo.AddOrderAsync(order);

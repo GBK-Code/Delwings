@@ -1,4 +1,4 @@
-﻿using Delwings.Models;
+﻿using Delwings.Models.ViewModels;
 using Delwings.Services;
 using Delwings.Services.Dashboards;
 using Microsoft.AspNetCore.Authentication;

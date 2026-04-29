@@ -1,4 +1,5 @@
-﻿using Delwings.Models;
+﻿using Delwings.Models.Basic;
+using Delwings.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delwings.Services.Dashboards

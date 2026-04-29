@@ -8,7 +8,7 @@ namespace Delwings.Controllers
         public IActionResult Dashboard()
         {
             string? role = User.FindFirstValue(ClaimTypes.Role);
-            if (role == null) { return RedirectToAction("AccessDenied", "Home"); }
+            if (role == null) {  return RedirectToAction("Logout", "Auth"); }
 
             return RedirectToAction("Dashboard", role, new { tab = "overview" } );
         }

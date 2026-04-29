@@ -1,4 +1,5 @@
 ﻿using Delwings.Models;
+using Delwings.Models.Basic;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -58,7 +59,7 @@ namespace Delwings.Services
             return true;
         }
 
-        public async Task<bool> CourierConfirm(int orderId, int courierId, string trackId)
+        public async Task<bool> CourierConfirm(int orderId, int courierId)
         {
             var order = await _ordersService.GetOrderByIdAsync(orderId);
             if (order == null) { return false; }

@@ -1,4 +1,4 @@
-﻿using Delwings.Models;
+﻿using Delwings.Models.Basic;
 using Delwings.Repositories.Interfaces;
 
 namespace Delwings.Services

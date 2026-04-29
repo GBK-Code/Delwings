@@ -1,4 +1,4 @@
-﻿using Delwings.Models;
+﻿using Delwings.Models.Basic;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 

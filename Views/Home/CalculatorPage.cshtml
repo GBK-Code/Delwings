@@ -1,10 +1,10 @@
-﻿@model Delwings.Models.Calculator;
+﻿@model Delwings.Models.Basic.Calculator;
 
 <div class="w-limit-90">
     <h1 class="theme-text">Calculator</h1>
-    <div class="d-flex justify-content-evenly">
+    <div class="d-flex justify-content-evenly flex-wrap gap-5">
         <div class="d-flex flex-column gap-3">
-            <div class="d-flex theme-div theme-orange-2 flex-grow-0 gap-2 p-3">
+            <div class="d-flex theme-div theme-orange-2 flex-grow-1 gap-2 p-3">
                 <img src="~/css/svg/city.svg" style="max-width: 50px;" />
 
                 <div>
@@ -14,7 +14,7 @@
 
             </div>
 
-            <div class="d-flex theme-div theme-orange-2 flex-grow-0 gap-2 p-3">
+            <div class="d-flex theme-div theme-orange-2 flex-grow-1 gap-2 p-3">
                 <img src="~/css/svg/city.svg" style="max-width: 50px;" />
 
                 <div>
@@ -25,13 +25,13 @@
             </div>
         </div>
     
-        <div class="theme-div theme-orange-2 p-3 align-self-start">
+        <div class="d-flex flex-column flex-grow-1 theme-div theme-orange-2 p-3 align-self-start">
             <h3 class="theme-text">Distance: @Model.dist</h3>
             <h3 class="theme-text">Price:</h3>
             <ol>
-                <li class="theme-text">S-package: @(Model.dist * 2 + 400) T</li>
-                <li class="theme-text">M-package: @(Model.dist * 2 + 550) T</li>
-                <li class="theme-text">L-package: @(Model.dist * 2 + 700) T</li>
+                <li class="theme-text">S-package: @(Math.Round(Model.dist * 2) + 400) T</li>
+                <li class="theme-text">M-package: @(Math.Round(Model.dist * 2) + 550) T</li>
+                <li class="theme-text">L-package: @(Math.Round(Model.dist * 2) + 700) T</li>
             </ol>
         </div>
     </div>

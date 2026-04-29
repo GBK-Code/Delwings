@@ -1,4 +1,4 @@
-﻿@model Delwings.Models.OperatorPageVM;
+﻿@model Delwings.Models.ViewModels.OperatorPageVM;
 
 
 <div class="d-flex flex-column theme-div theme-orange-4 p-3 del_min_w" style="max-width: 1000px; min-width: 1000px;">
@@ -55,7 +55,7 @@
                         <td>@order.ReceiverContact</td>
                         <td>@order.OrderType</td>
                         @{
-                            var courier = Model.CourierList.Where(user => user.Id == order.CourierId).FirstOrDefault();
+                            var courier = Model.AcceptedCourierList.Where(user => user.Id == order.CourierId).FirstOrDefault();
                             if (courier != null)
                             {
                                 <td>@courier.Name</td>
@@ -69,7 +69,7 @@
                         <td>@order.InsurancePrice</td>
                         <td>
                             <div class="d-inline-flex gap-2">
-                                <form method="post" asp-action="EditOrder">
+                                <form method="get" asp-action="EditOrder">
                                     <input type="hidden" name="id" value="@order.Id" />
                                     <input type="hidden" name="date" value="@order.Date" />
                                     <input type="hidden" name="time" value="@order.Time" />
@@ -87,7 +87,7 @@
                                 </form>
 
                                 <form method="post" asp-action="DeleteOrder">
-                                    <input type="hidden" name="id" value="@order.Id" />
+                                    <input type="hidden" name="orderId" value="@order.Id" />
                                     <button class="theme-button theme-button-table">Delete</button>
                                 </form>
                             </div>

@@ -1,4 +1,6 @@
-﻿namespace Delwings.Models
+﻿using Delwings.Models.Basic;
+
+namespace Delwings.Models.ViewModels
 {
     public class HeadPageVM
     {

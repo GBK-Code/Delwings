@@ -1,4 +1,6 @@
-﻿namespace Delwings.Models.Results
+﻿using Delwings.Models.Basic;
+
+namespace Delwings.Models.Results
 {
     public class OperatorTrackResult
     {

@@ -1,5 +1,5 @@
 ﻿using Delwings.Context;
-using Delwings.Models;
+using Delwings.Models.Basic;
 using Delwings.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

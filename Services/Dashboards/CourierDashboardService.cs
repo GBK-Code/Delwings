@@ -1,4 +1,5 @@
-﻿using Delwings.Models;
+﻿using Delwings.Models.Basic;
+using Delwings.Models.ViewModels;
 
 namespace Delwings.Services.Dashboards
 {
@@ -28,7 +29,7 @@ namespace Delwings.Services.Dashboards
             var status = await _courierApplicationService.GetStatusByCourierIdAsync(user.Id);
 
             var courierOrders = await _courierOrdersService.GetAllCourierOrdersAsync();
-            var myCourierOrders = courierOrders.Where(order => order.CourierId == user.Id);
+            var myCourierOrders = courierOrders.Where(order => order.CourierId == user.Id).ToList();
 
             List<Place> fromPlaces = new List<Place>();
             List<Place> toPlaces = new List<Place>();
@@ -50,7 +51,7 @@ namespace Delwings.Services.Dashboards
                 Status = status,
                 FromPlacesList = fromPlaces,
                 ToPlacesList = toPlaces,
-                CourierOrders = courierOrders
+                CourierOrders = myCourierOrders
             };
 
             return viewModel;

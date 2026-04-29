@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Delwings.Models;
+using Delwings.Models.Basic;
 
 namespace Delwings.Context
 {

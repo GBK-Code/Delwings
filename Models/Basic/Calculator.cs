@@ -1,4 +1,4 @@
-﻿namespace Delwings.Models
+﻿namespace Delwings.Models.Basic
 {
     public class Calculator
     {
