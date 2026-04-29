@@ -2,6 +2,7 @@
 using Delwings.Models.Enums;
 using Delwings.Models.Requests;
 using Delwings.Repositories.Interfaces;
+using System.Security.Principal;
 
 namespace Delwings.Services
 {
@@ -9,11 +10,13 @@ namespace Delwings.Services
     {
         private readonly IAccountRepository _accountsRepository;
         private readonly OperatorPlacesService _operatorPlacesService;
+        private readonly CourierApplicationService _courierApplicationService;
 
-        public AccountRegistrationService(IAccountRepository accountsRepo, OperatorPlacesService operatorPlacesService)
+        public AccountRegistrationService(IAccountRepository accountsRepo, OperatorPlacesService operatorPlacesService, CourierApplicationService courierApplicationService)
         {
             _accountsRepository = accountsRepo;
             _operatorPlacesService = operatorPlacesService;
+            _courierApplicationService = courierApplicationService;
         }
 
         private async Task<Account> RegisterAccount(CreateAccountRequest dto, AccountRoles role)
@@ -47,6 +50,30 @@ namespace Delwings.Services
 
             var operatorPlace = await _operatorPlacesService.BuildOperatorPlace(account.Id, placeId);
             await _operatorPlacesService.CreateOperatorPlaceAsync(account.Id, placeId);
+
+            return account.Id;
+        }
+
+        public async Task<int> RegisterUserAsync(CreateAccountRequest dto)
+        {
+            Account account = await RegisterAccount(dto, AccountRoles.User);
+            return account.Id;
+        }
+
+        public async Task<int> RegisterCourierAsync(CreateAccountRequest dto)
+        {
+            Account account = await RegisterAccount(dto, AccountRoles.Courier);
+
+            await _courierApplicationService.CreateApplicationAsync(
+               new CourierApplication
+               {
+                   CourierId = account.Id,
+                   Name = dto.Name,
+                   Surname = dto.Surname,
+                   Phone = dto.Phone,
+                   Status = CourierStatuses.Pending
+               }
+           );
 
             return account.Id;
         }

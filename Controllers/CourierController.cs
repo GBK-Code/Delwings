@@ -23,6 +23,7 @@ namespace Delwings.Controllers
             if (string.IsNullOrEmpty(identityName)) { return RedirectToAction("AccessDenied", "Home"); }
 
             CourierProfileVM? viewModel = await _courierDashboardService.Build(tab, identityName);
+            if (viewModel == null) { return RedirectToAction("AccessDenied", "Home"); }
 
             return View(viewModel);
         }

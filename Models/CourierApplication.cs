@@ -7,9 +7,9 @@ namespace Delwings.Models
         public int Id { get; set; }
 
         public int CourierId { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Phone { get; set; }
+        public string? Name { get; set; }
+        public string? Surname { get; set; }
+        public string? Phone { get; set; }
         public CourierStatuses Status { get; set; }
     }
 }

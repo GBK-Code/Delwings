@@ -1,20 +1,21 @@
-﻿using Delwings.Models;
-using Delwings.Models.Enums;
+﻿using Delwings.Models.Requests;
+using Delwings.Models.Results;
 using Delwings.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+
 
 namespace Delwings.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly AccountService _accountService;
-        private readonly CourierApplicationService _courierApplicationService;
+        private readonly LoginService _loginService;
+        private readonly AccountRegistrationService _accountRegistrationService;
 
-        public AuthController(AccountService accountService, CourierApplicationService courierApplicationService) { 
-            _accountService = accountService;
-            _courierApplicationService = courierApplicationService;
+        public AuthController (LoginService loginService, AccountRegistrationService accountRegistrationService) 
+        { 
+            _loginService = loginService;
+            _accountRegistrationService = accountRegistrationService;
         }
 
         public IActionResult Login()
@@ -30,99 +31,30 @@ namespace Delwings.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string login, string password)
         {
-            var user = await _accountService.GetAccountByLoginAsync(login);
-            bool validity = await _accountService.CheckValidity(user, password);
+            LoginResult? loginResult = await _loginService.LoginPrincipal(login, password);
+            if (loginResult == null) { return RedirectToAction("AccessDenied", "Home"); }
 
-            if (validity == false) { return RedirectToAction("AccessDenied", "Home"); }
+            await HttpContext.SignInAsync("Cookies", loginResult.Principal!);
 
-            string userRole = user.Role.ToString();
-
-            var claims = new List<Claim> 
-            { 
-                new Claim(ClaimTypes.Name, user.Login),
-                new Claim(ClaimTypes.Role, userRole)
-            };
-
-            var identity = new ClaimsIdentity(claims, "Cookies");
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync("Cookies", principal);
-
-            return RedirectToAction("Dashboard", userRole, new { tab = "overview" });
+            return RedirectToAction("Dashboard", loginResult.UserRoleString, new { tab = "overview" });
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterUser(
-                string name, 
-                string surname, 
-                string login, 
-                string phone,
-                string email,
-                string password,
-                string passwordConfirm
-            )
+        public async Task<IActionResult> RegisterUser(CreateAccountRequest request)
         {
-            if (password != passwordConfirm)
-            {
-                return View("Login");
-            }
-
-            Account newAccount = new Account
-            {
-                Name = name,
-                Surname = surname,
-                Login = login,
-                Phone = phone,
-                Email = email,
-                Password = password,
-                Role = Models.Enums.AccountRoles.User
-            };
-
-            await _accountService.CreateAccountAsync(newAccount);
-            return await Login(newAccount.Login, newAccount.Password);
+            await _accountRegistrationService.RegisterUserAsync(request);
+            if (request.Login == null || request.Password == null) { return RedirectToAction("BadReq", "Home"); }
+            return await Login(request.Login, request.Password);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterCourier(
-                string name,
-                string surname,
-                string login,
-                string phone,
-                string email,
-                string password,
-                string passwordConfirm
-            )
+        public async Task<IActionResult> RegisterCourier(CreateAccountRequest request)
         {
-            if (password != passwordConfirm)
-            {
-                return View("CourierLogin");
-            }
+            await _accountRegistrationService.RegisterCourierAsync(request);
 
-            Account newAccount = new Account
-            {
-                Name = name,
-                Surname = surname,
-                Login = login,
-                Phone = phone,
-                Email = email,
-                Password = password,
-                Role = Models.Enums.AccountRoles.Courier
-            };
-
-            await _accountService.CreateAccountAsync(newAccount);
-            await _courierApplicationService.CreateApplicationAsync(
-                new CourierApplication
-                {
-                    Name = newAccount.Name,
-                    CourierId = newAccount.Id,
-                    Surname =newAccount.Surname,
-                    Phone = newAccount.Phone,
-                    Status = CourierStatuses.Pending
-                }    
-            );
-            return await Login(newAccount.Login, newAccount.Password);
+           if (request.Login == null || request.Password == null) { return RedirectToAction("BadReq", "Home"); }
+            return await Login(request.Login, request.Password);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Logout()
