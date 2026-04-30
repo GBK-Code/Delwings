@@ -3,7 +3,7 @@
 <div class="d-flex flex-column w-limit-90 gap-2">
     <h1 class="theme-text">Operator Panel</h1>
 
-    <div class="d-flex align-items-start gap-4 res-to-col">
+    <div class="d-flex align-items-start gap-4 res-to-col mw-100" style="min-width: 0;">
         @* Tabs *@
         <partial name="_TabsCard" />
 
@@ -32,47 +32,24 @@
                     <partial name="_ReleaseOrderCard" />
                 }
 
-                <partial name="_OrdersListCard" />
+                <div class="mw-100" style="min-width: 0px; overflow: hidden;">
+                    <partial name="_OrdersListCard" />
+                </div>
             </div>
         }
 
         @if (Model.Tab == "tables")
         {
-            <div class="mw-100">
-                <partial name="_OrdersListCard" />
+            <div class="d-flex flex-column mw-100 gap-1">
+                
+                <partial name="_OrdersFilterCard" />
+
+                <div id="ordersSearchTable" style="min-width: 0px; overflow: hidden;">
+                    <partial name="_OrdersListCard" />
+                </div>
             </div>
         }
     </div>
 </div>
 
-<script>
-    const orderTypeRadios = document.querySelectorAll('input[name="orderType"]');
-    const expressFields = document.getElementById('expressFields');
-    const insuranceFields = document.getElementById('insuranceFields');
-    const courierRadios = document.querySelectorAll('input[name="courierId"]')
-
-    function updateFields() {
-        const selected = document.querySelector('input[name="orderType"]:checked').value;
-
-        expressFields.classList.add('d-none');
-        insuranceFields.classList.add('d-none');
-
-        if (selected === 'ExpressOrder') {
-            expressFields.classList.remove('d-none');
-            courierRadios.forEach(r => r.required = true);
-           
-        } else if (selected === 'InsuredOrder') {
-            insuranceFields.classList.remove('d-none');
-            courierRadios.forEach(r => {
-                r.required = false;
-                r.checked = false;
-            });
-        }
-    }
-
-    orderTypeRadios.forEach(radio => {
-        radio.addEventListener('change', updateFields);
-    });
-
-    updateFields();
-</script>
+<script src="~/js/orderFieldsManipulator.js"></script>

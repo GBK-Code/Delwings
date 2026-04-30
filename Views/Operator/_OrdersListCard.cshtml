@@ -1,10 +1,96 @@
 ﻿@model Delwings.Models.ViewModels.OperatorPageVM;
 
-
-<div class="d-flex flex-column theme-div theme-orange-4 p-3 del_min_w" style="max-width: 1000px; min-width: 1000px;">
+<div class="d-flex flex-column theme-orange-4 p-3 w-100">
     <h3 class="theme-text">List of Orders</h3>
 
-    <div class="table-responsive" style="max-height: 150px;">
+    <div class="table-responsive" style="max-height: 500px;">
+        <table class="table table-warning table-sm text-center">
+            <thead class="fw-bold">
+                <tr>
+                    <th style="width: 3%">Id</th>
+                    <th>Date</th>
+                    <th style="width: 5%;">Time</th>
+                    <th style="width: 5%">Sender</th>
+                    <th>Location</th>
+                    <th>Destination</th>
+                    <th>Contact</th>
+                    <th>Type</th>
+                    <th>Courier</th>
+                    <th>Insurance</th>
+                    <th>Price</th>
+                    <th>Control</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var order in Model.OrdersList)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.Date</td>
+                        <td>@order.Time</td>
+                        <td>@order.SenderId</td>
+
+                        @{
+                            var place = Model.PlacesList.FirstOrDefault(p => p.Id == order.CurrentLocationId);
+                        }
+
+                        <td class="text-truncate-cell">
+                            @if (place != null)
+                            {
+                                @($"{place.Country}, {place.City}, {place.Address}")
+                            }
+                            else
+                            {
+                                <form method="post" asp-action="AssignOrderPlace" class="d-flex gap-1">
+                                    <input type="hidden" name="orderId" value="@order.Id" />
+                                    <input type="hidden" name="placeId" value="@Model.WorkingPlace.Id" />
+
+                                    <input name="trackId" class="theme-input form-control form-control-sm" placeholder="Track" required />
+                                    <button class="theme-button theme-button-table">OK</button>
+                                </form>
+                            }
+                        </td>
+
+                        <td class="text-truncate-cell">@order.Destination</td>
+                        <td class="text-truncate-cell">@order.ReceiverContact</td>
+                        <td>@order.OrderType</td>
+
+                        @{
+                            var courier = Model.AcceptedCourierList.FirstOrDefault(u => u.Id == order.CourierId);
+                        }
+
+                        <td>@courier?.Name</td>
+                        <td class="text-truncate-cell">@order.InsuranceCompany</td>
+                        <td>@order.InsurancePrice</td>
+
+                        <td>
+                            <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                <form method="get" asp-action="EditOrder">
+                                    <input type="hidden" name="id" value="@order.Id" />
+                                    <button class="theme-button theme-button-table">Edit</button>
+                                </form>
+
+                                <form method="post" asp-action="DeleteOrder">
+                                    <input type="hidden" name="orderId" value="@order.Id" />
+                                    <button class="theme-button theme-button-table">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@* @model Delwings.Models.ViewModels.OperatorPageVM;
+
+
+<div class="d-flex flex-column theme-div theme-orange-4 p-3">
+    <h3 class="theme-text">List of Orders</h3>
+
+    <div class="table-responsive" style="max-height: 150px; overflow-x: auto;">
         <table class="table table-warning table-sm text-center">
             <thead class="fw-bold">
                 <tr>
@@ -26,10 +112,10 @@
                 @foreach (var order in Model.OrdersList)
                 {
                     <tr>
-                        <td>@order.Id</td>
-                        <td>@order.Date</td>
-                        <td>@order.Time</td>
-                        <td>@order.SenderId</td>
+                        <td style="width: 15px;">@order.Id</td>
+                        <td style="width: 70px;">@order.Date</td>
+                        <td style="width: 70px;">@order.Time</td>
+                        <td style="width: 50px;">@order.SenderId</td>
                         @{
                             var place = Model.PlacesList.Where(place => place.Id == order.CurrentLocationId).FirstOrDefault();
                                 
@@ -39,21 +125,22 @@
                             }
                             else
                             {
-                                <form method="post" asp-action="AssignOrderPlace">
-                                    <input type="hidden" name="orderId" value="@order.Id" />
-                                    <input type="hidden" name="placeId" value="@Model.WorkingPlace.Id" />
-                                    <td>
+                                <td>
+                                    <form method="post" asp-action="AssignOrderPlace">
+                                        <input type="hidden" name="orderId" value="@order.Id" />
+                                        <input type="hidden" name="placeId" value="@Model.WorkingPlace.Id" />
+
                                         <div class="d-flex gap-2">
                                             <input name="trackId" class="theme-input" placeholder="Track ID" required />
                                             <button class="theme-button theme-button-table">The order is here</button>
                                         </div>
-                                    </td>
-                                </form>
+                                    </form>
+                                </td>
                             }
                         }
-                        <td>@order.Destination</td>
-                        <td>@order.ReceiverContact</td>
-                        <td>@order.OrderType</td>
+                        <td style="width: 200px;">@order.Destination</td>
+                        <td style="width: 200px;">@order.ReceiverContact</td>
+                        <td style="width: 150px;">@order.OrderType</td>
                         @{
                             var courier = Model.AcceptedCourierList.Where(user => user.Id == order.CourierId).FirstOrDefault();
                             if (courier != null)
@@ -65,8 +152,8 @@
                                 <td></td>
                             }
                         }
-                        <td>@order.InsuranceCompany</td>
-                        <td>@order.InsurancePrice</td>
+                        <td style="width: 200px;">@order.InsuranceCompany</td>
+                        <td style="width: 200px;">@order.InsurancePrice</td>
                         <td>
                             <div class="d-inline-flex gap-2">
                                 <form method="get" asp-action="EditOrder">
@@ -97,4 +184,4 @@
             </tbody>
         </table>
     </div>
-</div>
+</div> *@

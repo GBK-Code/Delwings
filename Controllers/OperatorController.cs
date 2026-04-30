@@ -1,4 +1,5 @@
 ﻿using Delwings.Models.Basic;
+using Delwings.Models.Enums;
 using Delwings.Models.Requests;
 using Delwings.Models.ViewModels;
 using Delwings.Services;
@@ -15,17 +16,20 @@ namespace Delwings.Controllers
         private readonly OrdersService _ordersService;
         private readonly OperatorVMService _operatorVMService;
         private readonly DeliveryService _deliveryService;
+        private readonly TableSearchService _tableSearchService;
         
         public OperatorController 
             (
                 OrdersService ordersService,
                 OperatorVMService operatorVMService,
-                DeliveryService deliveryService
+                DeliveryService deliveryService,
+                TableSearchService tableSearchService
             )
         {
             _ordersService = ordersService;
             _operatorVMService = operatorVMService;
             _deliveryService = deliveryService;
+            _tableSearchService = tableSearchService;
         }
 
         [HttpGet]
@@ -44,8 +48,6 @@ namespace Delwings.Controllers
         public async Task<IActionResult> OrderFound(int orderId)
         {
             Order? order = await _ordersService.GetOrderByIdAsync(orderId);
-            if (order == null) { return RedirectToAction("BadReq", "Home"); }
-
             return View(order);
         }
 
@@ -89,7 +91,7 @@ namespace Delwings.Controllers
             Order? order = await _ordersService.GetOrderByReceiverNumberAsync(receiverNumber);
             if (order == null) { return RedirectToAction("BadReq", "Home"); }
 
-            return RedirectToAction("OrderFound", "Operator", new { orderId = order.Id});
+            return RedirectToAction("OrderFound", "Operator", new { orderId = order.Id });
         }
 
         [HttpPost]
@@ -108,6 +110,30 @@ namespace Delwings.Controllers
             if (!success) { return RedirectToAction("BadReq", "Home"); }
 
             return RedirectToAction("Dashboard", new { tab = "redirection" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchOrdersByDate(OrdersFilterRequest request)
+        {
+            string? identityName = User.Identity?.Name;
+            if (string.IsNullOrEmpty(identityName)) { return RedirectToAction("AccessDenied", "Home"); }
+
+            List<Order> filtered = await _tableSearchService.SearchOrdersByDate(request.From, request.To);
+
+            filtered = filtered.Where
+                (
+                    ord =>  (ord.OrderType == OrderTypes.Ordinary && request.Ordinary) ||
+                            (ord.OrderType == OrderTypes.Express && request.Express) ||
+                            (ord.OrderType == OrderTypes.Insured && request.Insured)
+                ).ToList();
+           
+
+            OperatorPageVM? viewModel = await _operatorVMService.BuildDashboard("tables", identityName);
+            if (viewModel == null) { return RedirectToAction("AccessDenied", "Home"); }
+
+            viewModel.OrdersList = filtered;
+
+            return PartialView("_OrdersListCard", viewModel);
         }
     }
 }

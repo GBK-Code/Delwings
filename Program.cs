@@ -38,6 +38,7 @@ builder.Services.AddScoped<OrderTokensGenerator>();
 builder.Services.AddScoped<CalculatorService>();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddScoped<DeliveryService>();
+builder.Services.AddScoped<TableSearchService>();
 
 // Dashboards
 builder.Services.AddScoped<HeadDashboardService>();
