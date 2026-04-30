@@ -7,7 +7,7 @@ namespace Delwings.Services
         public int GenerateReceiverNumber()
         {
             Random rng = new Random();
-            int number = rng.Next(1000000);
+            int number = rng.Next(1000000, 9999999);
 
             return number;
         }

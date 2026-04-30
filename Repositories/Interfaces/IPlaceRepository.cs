@@ -9,6 +9,7 @@ namespace Delwings.Repositories.Interfaces
         Task CreatePlaceAsync(Place place);
         Task UpdatePlaceAsync(Place place);
         Task DeletePlaceAsync(Place place);
+        Task ClearPlaces();
         Task SaveChangesAsync();
     }
 }

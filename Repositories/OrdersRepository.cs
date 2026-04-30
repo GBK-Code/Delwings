@@ -35,6 +35,8 @@ namespace Delwings.Repositories
             _context.Set<Order>().Remove(order);
             return Task.CompletedTask;
         }
+
+        public async Task ClearTable() => await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE Orders");
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }
 }

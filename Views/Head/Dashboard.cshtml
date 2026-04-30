@@ -52,6 +52,13 @@
             </div>
         }
 
+        @if (Model.Tab == "devtools")
+        {
+            <div class="mw-100">
+                <partial name="_DevTools.cshtml" />
+            </div>
+        }
+
     </div>
 </div>
 

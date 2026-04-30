@@ -11,6 +11,7 @@ namespace Delwings.Repositories.Interfaces
         Task AddOrderAsync(Order order);
         Task UpdateOrderAsync(Order order);
         Task DeleteOrderAsync(Order order);
+        Task ClearTable();
         Task SaveChangesAsync();
     }
 }

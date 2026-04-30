@@ -16,20 +16,20 @@ namespace Delwings.Controllers
         private readonly OrdersService _ordersService;
         private readonly OperatorVMService _operatorVMService;
         private readonly DeliveryService _deliveryService;
-        private readonly TableSearchService _tableSearchService;
+        private readonly TableFilterService _tableFilterService;
         
         public OperatorController 
             (
                 OrdersService ordersService,
                 OperatorVMService operatorVMService,
                 DeliveryService deliveryService,
-                TableSearchService tableSearchService
+                TableFilterService tableFilterService
             )
         {
             _ordersService = ordersService;
             _operatorVMService = operatorVMService;
             _deliveryService = deliveryService;
-            _tableSearchService = tableSearchService;
+            _tableFilterService = tableFilterService;
         }
 
         [HttpGet]
@@ -113,38 +113,29 @@ namespace Delwings.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchOrdersByDate(OrdersFilterRequest request)
+        public async Task<IActionResult> FilterOrders(OrdersFilterRequest request)
         {
-            string? identityName = User.Identity?.Name;
-            if (string.IsNullOrEmpty(identityName)) { return RedirectToAction("AccessDenied", "Home"); }
-
-            List<Order> filtered = await _ordersService.GetAllOrdersAsync();
-
-            if (request.From != null && request.To != null)
-            {
-                filtered = await _tableSearchService.SearchOrdersByDate(request.From, request.To);
-            }
-
-            filtered = filtered.Where
-                (
-                    ord => (ord.OrderType == OrderTypes.Ordinary && request.Ordinary) ||
-                            (ord.OrderType == OrderTypes.Express && request.Express) ||
-                            (ord.OrderType == OrderTypes.Insured && request.Insured)
-                ).ToList();
-
-            if (request.Sorted)
-            {
-                if (request.Descending) { filtered = filtered.OrderByDescending(ord => ord.Date).ToList(); }
-                else { filtered = filtered.OrderBy(ord => ord.Date).ToList(); }
-            }
-           
+            string identityName = User.Identity!.Name!;
 
             OperatorPageVM? viewModel = await _operatorVMService.BuildDashboard("tables", identityName);
             if (viewModel == null) { return RedirectToAction("AccessDenied", "Home"); }
 
-            viewModel.OrdersList = filtered;
+            viewModel.OrdersList = await _tableFilterService.GetFilteredOrders(request);
 
             return PartialView("_OrdersListCard", viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterRedirectOrders(RedirectOrdersFilterRequest request)
+        {
+            string identityName = User.Identity!.Name!;
+
+            OperatorPageVM? viewModel = await _operatorVMService.BuildDashboard("tables", identityName);
+            if (viewModel == null) { return RedirectToAction("AccessDenied", "Home"); }
+
+            viewModel.OrdersList = await _tableFilterService.GetFilteredRedirectOrders(request);
+
+            return PartialView("_RedirectOrdersList", viewModel);
         }
     }
 }

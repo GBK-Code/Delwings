@@ -1,0 +1,21 @@
+﻿<div class="d-flex flex-column flex-grow-1 theme-div theme-orange-2 p-3">
+    <h3 class="theme-text">Data Generator</h3>
+
+    <div class="d-flex gap-2">
+        <form method="post" asp-action="GeneratePlaces" asp-controller="Dev">
+            <button class="theme-button theme-text">Generate 50 Places</button>
+        </form>
+
+        <form method="post" asp-action="GenerateOrders" asp-controller="Dev">
+            <button class="theme-button theme-text">Generate 200 Orders</button>
+        </form>
+
+        <form method="post" asp-action="ClearPlaces" asp-controller="Dev">
+            <button class="theme-button theme-text">Clear places</button>
+        </form>
+
+        <form method="post" asp-action="ClearOrders" asp-controller="Dev">
+            <button class="theme-button theme-text">Clear orders</button>
+        </form>
+    </div>
+</div>

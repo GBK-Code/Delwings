@@ -1,0 +1,32 @@
+﻿@* Fiters *@
+<div class="d-flex flex-wrap gap-2">
+    <div class="d-flex align-items-center gap-1">
+        <p class="theme-text">Track Id:</p>
+        <input id="trackInput" class="theme-input" />
+    </div>
+
+    <div class="d-flex align-items-center gap-1">
+        <p class="theme-text">Address:</p>
+        <input id="addressInput" class="theme-input" />
+    </div>
+
+    <label class="theme-radio">
+        <input type="checkbox" name="typeCheck" value="OrdinaryOrder" checked>
+        <span class="theme-inner-radio"></span>
+        <span class="theme-text">Ordinary Order</span>
+    </label>
+
+    <label class="theme-radio">
+        <input type="checkbox" name="typeCheck" value="InsuredOrder" checked>
+        <span class="theme-inner-radio"></span>
+        <span class="theme-text">Insured Order</span>
+    </label>
+
+    <label class="theme-radio">
+        <input type="checkbox" name="typeCheck" value="ExpressOrder" checked>
+        <span class="theme-inner-radio"></span>
+        <span class="theme-text">Express Order</span>
+    </label>
+</div>
+
+<script src="~/js/redirectOrdersFilter.js"></script>

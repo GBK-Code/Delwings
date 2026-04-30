@@ -1,0 +1,44 @@
+﻿@model Delwings.Models.ViewModels.OperatorPageVM;
+
+
+<div class="table-responsive" style="max-height: 200px;">
+    <table class="table table-warning table-sm text-center align-middle">
+        <thead class="fw-bold">
+            <tr>
+                <td style="width: 5%;">Order ID</td>
+                <td>Track ID</td>
+                <td>Current At</td>
+                <td>Place Type</td>
+                <td>Select</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.OrdersList)
+            {
+                if (order.IsCarried) { continue; }
+
+                var courierOrder = Model.CourierOrders.Where(ord => ord.OrderId == order.Id).FirstOrDefault();
+                if (courierOrder != null) { continue; }
+                var location = Model.PlacesList.Where(place => place.Id == order.CurrentLocationId).FirstOrDefault();
+
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.TrackId</td>
+                    @if (location != null)
+                    {
+                        <td>@location.Country, @location.City, @location.Address</td>
+                        <td>@location.Type</td>
+                    }
+
+                    <td>
+                        <label class="theme-radio">
+                            <input type="radio" name="orderId" value="@order.Id" required />
+                            <span class="theme-inner-radio"></span>
+                            <span>Select</span>
+                        </label>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

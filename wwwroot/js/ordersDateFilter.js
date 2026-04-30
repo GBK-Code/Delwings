@@ -9,8 +9,8 @@
     const descendingCheck = document.getElementsByName("descendingCheck")[0].checked;
     const sortedCheck = document.getElementsByName("sortedCheck")[0].checked;
 
-    const responseString = `/Operator/SearchOrdersByDate?from=${fromDate}&to=${toDate}&ordinary=${ordinaryCheck}&express=${expressCheck}&insured=${insuredCheck}&sorted=${sortedCheck}&descending=${descendingCheck}`
-    console.log(responseString);
+    const responseString = `/Operator/FilterOrders?from=${fromDate}&to=${toDate}&ordinary=${ordinaryCheck}&express=${expressCheck}&insured=${insuredCheck}&sorted=${sortedCheck}&descending=${descendingCheck}`
+
     const response = await fetch(responseString);
     const html = await response.text();
 

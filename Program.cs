@@ -33,12 +33,18 @@ builder.Services.Configure<ApiSettings>
 
 builder.Services.AddHttpClient<ApiService>();
 
+// Utils
+builder.Services.AddScoped<TableSearchService>();
+builder.Services.AddScoped<TableFilterService>();
+builder.Services.AddScoped<DataGeneratorService>();
+builder.Services.AddScoped<DataEraserService>();
+
+// Specific
 builder.Services.AddScoped<AccountRegistrationService>();
 builder.Services.AddScoped<OrderTokensGenerator>();
 builder.Services.AddScoped<CalculatorService>();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddScoped<DeliveryService>();
-builder.Services.AddScoped<TableSearchService>();
 
 // Dashboards
 builder.Services.AddScoped<HeadDashboardService>();
@@ -48,6 +54,7 @@ builder.Services.AddScoped<CourierDashboardService>();
 builder.Services.AddScoped<UserDashboardService>();
 builder.Services.AddScoped<TrackPageService>();
 
+// Database
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<OrdersService>();
 

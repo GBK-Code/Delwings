@@ -33,6 +33,7 @@ namespace Delwings.Repositories
             _context.Set<Place>().Remove(place);
         }
 
-        public Task SaveChangesAsync() => _context.SaveChangesAsync();
+        public async Task ClearPlaces() => await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE Places");
+        public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }
 }
