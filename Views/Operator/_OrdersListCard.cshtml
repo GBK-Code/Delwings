@@ -68,6 +68,19 @@
                             <div class="d-flex flex-wrap gap-1 justify-content-center">
                                 <form method="get" asp-action="EditOrder">
                                     <input type="hidden" name="id" value="@order.Id" />
+                                    <input type="hidden" name="date" value="@order.Date" />
+                                    <input type="hidden" name="time" value="@order.Time" />
+                                    <input type="hidden" name="senderId" value="@order.SenderId" />
+                                    <input type="hidden" name="trackId" value="@order.TrackId" />
+                                    <input type="hidden" name="receiverNumber" value="@order.ReceiverNumber" />
+                                    <input type="hidden" name="destination" value="@order.Destination" />
+                                    <input type="hidden" name="contact" value="@order.ReceiverContact" />
+                                    <input type="hidden" name="currentPlaceId" value="@order.CurrentLocationId" />
+                                    <input type="hidden" name="orderType" value="@order.OrderType" />
+                                    <input type="hidden" name="courierId" value="@order.CourierId" />
+                                    <input type="hidden" name="insuranceCompany" value="@order.InsuranceCompany" />
+                                    <input type="hidden" name="insurancePrice" value="@order.InsurancePrice" />
+
                                     <button class="theme-button theme-button-table">Edit</button>
                                 </form>
 
@@ -83,105 +96,3 @@
         </table>
     </div>
 </div>
-
-@* @model Delwings.Models.ViewModels.OperatorPageVM;
-
-
-<div class="d-flex flex-column theme-div theme-orange-4 p-3">
-    <h3 class="theme-text">List of Orders</h3>
-
-    <div class="table-responsive" style="max-height: 150px; overflow-x: auto;">
-        <table class="table table-warning table-sm text-center">
-            <thead class="fw-bold">
-                <tr>
-                    <td style="width: 5%;">Id</td>
-                    <td>Date</td>
-                    <td>Time</td>
-                    <td>Sender Id</td>
-                    <td>Current Location</td>
-                    <td>Destination</td>
-                    <td>Receiver Contact</td>
-                    <td>Order Type</td>
-                    <td>Courier</td>
-                    <td>Insuarnce Company</td>
-                    <td>Insurance Price</td>
-                    <td>Control</td>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in Model.OrdersList)
-                {
-                    <tr>
-                        <td style="width: 15px;">@order.Id</td>
-                        <td style="width: 70px;">@order.Date</td>
-                        <td style="width: 70px;">@order.Time</td>
-                        <td style="width: 50px;">@order.SenderId</td>
-                        @{
-                            var place = Model.PlacesList.Where(place => place.Id == order.CurrentLocationId).FirstOrDefault();
-                                
-                            if (place != null)
-                            {
-                                <td>@place.Country, @place.City, @place.Address</td>
-                            }
-                            else
-                            {
-                                <td>
-                                    <form method="post" asp-action="AssignOrderPlace">
-                                        <input type="hidden" name="orderId" value="@order.Id" />
-                                        <input type="hidden" name="placeId" value="@Model.WorkingPlace.Id" />
-
-                                        <div class="d-flex gap-2">
-                                            <input name="trackId" class="theme-input" placeholder="Track ID" required />
-                                            <button class="theme-button theme-button-table">The order is here</button>
-                                        </div>
-                                    </form>
-                                </td>
-                            }
-                        }
-                        <td style="width: 200px;">@order.Destination</td>
-                        <td style="width: 200px;">@order.ReceiverContact</td>
-                        <td style="width: 150px;">@order.OrderType</td>
-                        @{
-                            var courier = Model.AcceptedCourierList.Where(user => user.Id == order.CourierId).FirstOrDefault();
-                            if (courier != null)
-                            {
-                                <td>@courier.Name</td>
-                            }
-                            else
-                            {
-                                <td></td>
-                            }
-                        }
-                        <td style="width: 200px;">@order.InsuranceCompany</td>
-                        <td style="width: 200px;">@order.InsurancePrice</td>
-                        <td>
-                            <div class="d-inline-flex gap-2">
-                                <form method="get" asp-action="EditOrder">
-                                    <input type="hidden" name="id" value="@order.Id" />
-                                    <input type="hidden" name="date" value="@order.Date" />
-                                    <input type="hidden" name="time" value="@order.Time" />
-                                    <input type="hidden" name="trackId" value="@order.TrackId" />
-                                    <input type="hidden" name="senderId" value="@order.SenderId" />
-                                    <input type="hidden" name="courierId" value="@order.CourierId" />
-                                    <input type="hidden" name="insuranceCompany" value="@order.InsuranceCompany" />
-                                    <input type="hidden" name="insurancePrice" value="@order.InsurancePrice" />
-                                    <input type="hidden" name="currentPlaceId" value="@order.CurrentLocationId" />
-                                    <input type="hidden" name="destination" value="@order.Destination" />
-                                    <input type="hidden" name="contact" value="@order.ReceiverContact" />
-                                    <input type="hidden" name="orderType" value="@order.OrderType.ToString()" />
-
-                                    <button class="theme-button theme-button-table">Edit</button>
-                                </form>
-
-                                <form method="post" asp-action="DeleteOrder">
-                                    <input type="hidden" name="orderId" value="@order.Id" />
-                                    <button class="theme-button theme-button-table">Delete</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div> *@

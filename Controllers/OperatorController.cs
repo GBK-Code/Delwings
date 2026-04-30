@@ -118,14 +118,25 @@ namespace Delwings.Controllers
             string? identityName = User.Identity?.Name;
             if (string.IsNullOrEmpty(identityName)) { return RedirectToAction("AccessDenied", "Home"); }
 
-            List<Order> filtered = await _tableSearchService.SearchOrdersByDate(request.From, request.To);
+            List<Order> filtered = await _ordersService.GetAllOrdersAsync();
+
+            if (request.From != null && request.To != null)
+            {
+                filtered = await _tableSearchService.SearchOrdersByDate(request.From, request.To);
+            }
 
             filtered = filtered.Where
                 (
-                    ord =>  (ord.OrderType == OrderTypes.Ordinary && request.Ordinary) ||
+                    ord => (ord.OrderType == OrderTypes.Ordinary && request.Ordinary) ||
                             (ord.OrderType == OrderTypes.Express && request.Express) ||
                             (ord.OrderType == OrderTypes.Insured && request.Insured)
                 ).ToList();
+
+            if (request.Sorted)
+            {
+                if (request.Descending) { filtered = filtered.OrderByDescending(ord => ord.Date).ToList(); }
+                else { filtered = filtered.OrderBy(ord => ord.Date).ToList(); }
+            }
            
 
             OperatorPageVM? viewModel = await _operatorVMService.BuildDashboard("tables", identityName);

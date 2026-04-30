@@ -11,7 +11,21 @@
             <input id="dateTo" type="date" class="theme-input" />
         </div>
 
-        <button id="ordersFilterButton" class="theme-button theme-text">Filter</button>
+        <div class="d-flex align-items-center gap-1">
+            <p class="theme-text">Sort by date: </p>
+
+            <label class="theme-radio">
+                <input type="checkbox" name="sortedCheck">
+                <span class="theme-inner-radio"></span>
+                <span class="theme-text">Sorted</span>
+            </label>
+           
+            <label class="theme-radio">
+                <input type="checkbox" name="descendingCheck">
+                <span class="theme-inner-radio"></span>
+                <span class="theme-text">Descending</span>
+            </label>
+        </div>
     </div>
 
     <div class="d-flex flex-wrap gap-2">
@@ -32,6 +46,8 @@
             <span class="theme-inner-radio"></span>
             <span class="theme-text">Express Order</span>
         </label>
+
+        <button id="ordersFilterButton" class="theme-button theme-text">Filter</button>
     </div>
 </div>
 
