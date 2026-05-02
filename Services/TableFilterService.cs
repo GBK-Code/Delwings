@@ -10,8 +10,15 @@ namespace Delwings.Services
     {
         private readonly TableSearchService _tableSearchService;
         private readonly OrdersService _ordersService;
+        private readonly PlaceService _placeService;
 
-        private async Task<List<Order>> FilterOrderType(List<Order> notFiltered, bool ordinary, bool insured, bool express)
+        public TableFilterService(TableSearchService tableSearchService, OrdersService ordersService, PlaceService placeService)
+        {
+            _tableSearchService = tableSearchService;
+            _ordersService = ordersService;
+            _placeService = placeService;
+        }
+        private async Task<List<Order>> FilterOrdersByType(List<Order> notFiltered, bool ordinary, bool insured, bool express)
         {
             List<Order> filtered = notFiltered.Where
                 (
@@ -23,10 +30,25 @@ namespace Delwings.Services
             return filtered;
         }
 
-        public TableFilterService(TableSearchService tableSearchService, OrdersService ordersService)
+        private async Task<List<Order>> FilterOrdersByPlaceType(List<Order> notFiltered, bool accept, bool sorting, bool pickup)
         {
-            _tableSearchService = tableSearchService;
-            _ordersService = ordersService;
+            List<Order> filtered = new List<Order>();
+            List<Place> places = await _placeService.GetAllPlacesAsync();
+
+            foreach (Order order in notFiltered)
+            {
+                Place? orderPlace = places.Where(plc => plc.Id == order.CurrentLocationId).FirstOrDefault();
+                if (orderPlace == null) { continue; }
+
+                if ( (orderPlace.Type == PlaceTypes.AcceptPoint && accept) ||
+                     (orderPlace.Type == PlaceTypes.SortingPoint && sorting) ||
+                     (orderPlace.Type == PlaceTypes.PickUpPoint && pickup) )
+                {
+                    filtered.Add(order);
+                }
+            }
+
+            return filtered;
         }
 
         public async Task<List<Order>> GetFilteredOrders(OrdersFilterRequest request)
@@ -38,7 +60,7 @@ namespace Delwings.Services
                 filtered = await _tableSearchService.SearchOrdersByDate(request.From, request.To);
             }
 
-            filtered = await FilterOrderType(filtered, request.Ordinary, request.Insured, request.Express);
+            filtered = await FilterOrdersByType(filtered, request.Ordinary, request.Insured, request.Express);
 
             if (request.Sorted)
             {
@@ -53,12 +75,12 @@ namespace Delwings.Services
         {
             string? trackId = request.TrackId;
             string? address = request.Address;
-            bool insuredCheck = request.Insured;
-            bool ordinaryCheck = request.Ordinary;
-            bool expressCheck = request.Express;
+            bool acceptCheck = request.Accept;
+            bool sortingCheck = request.Sorting;
+            bool pickupCheck = request.PickUp;
 
             List<Order> filtered = await _ordersService.GetAllOrdersAsync();
-            filtered = await FilterOrderType(filtered, ordinaryCheck, insuredCheck, expressCheck);
+            filtered = await FilterOrdersByPlaceType(filtered, acceptCheck, sortingCheck, pickupCheck);
 
             if (trackId != null)
             {

@@ -5,14 +5,14 @@ const insuredCheckbox = document.getElementsByName("typeCheck")[1];
 const expressCheckbox = document.getElementsByName("typeCheck")[2];
 
 async function filter() {
-    const ordinaryCheck = ordinaryCheckbox.checked;
-    const insuredCheck = insuredCheckbox.checked;
-    const expressCheck = expressCheckbox.checked;
+    const acceptCheck = ordinaryCheckbox.checked;
+    const sortingCheck = insuredCheckbox.checked;
+    const pickupCheck = expressCheckbox.checked;
 
     const trackId = document.getElementById("trackInput").value;
     const address = document.getElementById("addressInput").value;
     
-    const responseString = `/Operator/FilterRedirectOrders?trackId=${trackId}&address=${address}&ordinary=${ordinaryCheck}&express=${expressCheck}&insured=${insuredCheck}`
+    const responseString = `/Operator/FilterRedirectOrders?trackId=${trackId}&address=${address}&accept=${acceptCheck}&sorting=${sortingCheck}&pickup=${pickupCheck}`
 
     const response = await fetch(responseString);
     const html = await response.text();
