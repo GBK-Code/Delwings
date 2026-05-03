@@ -30,6 +30,18 @@ namespace Delwings.Services
             return filtered;
         }
 
+        private async Task<List<Place>> FilterPlacesByType(List<Place> notFiltered, bool accept, bool sorting, bool pickup)
+        {
+            List<Place> filtered = notFiltered.Where
+                (
+                    plc =>  (plc.Type == PlaceTypes.AcceptPoint && accept) ||
+                            (plc.Type == PlaceTypes.SortingPoint && sorting) ||
+                            (plc.Type == PlaceTypes.PickUpPoint && pickup)
+                ).ToList();
+
+            return filtered;
+        }
+
         private async Task<List<Order>> FilterOrdersByPlaceType(List<Order> notFiltered, bool accept, bool sorting, bool pickup)
         {
             List<Order> filtered = new List<Order>();
@@ -90,6 +102,30 @@ namespace Delwings.Services
             if (address != null)
             {
                 filtered = await _tableSearchService.SearchOrderByAddressSubString(filtered, address);
+            }
+
+            return filtered;
+        }
+
+        public async Task<List<Place>> GetFilteredPlaces(PlacesFilterRequest request)
+        {
+            List<Place> filtered = await _placeService.GetAllPlacesAsync();
+
+            filtered = await FilterPlacesByType(filtered, request.IsAccept, request.IsSorting, request.IsPickup);
+
+            if (request.Country != null)
+            { 
+                filtered = await _tableSearchService.SearchPlacesByCountrySubstring(filtered, request.Country);
+            }
+
+            if (request.City != null)
+            {
+                filtered = await _tableSearchService.SearchPlacesByCitySubstring(filtered, request.City);
+            }
+
+            if (request.Address != null)
+            {
+                filtered = await _tableSearchService.SearchPlacesByAddressSubstring(filtered, request.Address);
             }
 
             return filtered;

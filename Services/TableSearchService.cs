@@ -35,6 +35,7 @@ namespace Delwings.Services
             return filtered;
         }
 
+
         public async Task<List<Order>> SearchOrderByTrackSubString(List<Order> orders, string substring)
         {
             List<Order> filtered = new List<Order>();
@@ -43,7 +44,7 @@ namespace Delwings.Services
             {
                 if (order.TrackId == null) { continue; }
 
-                if (order.TrackId.Contains(substring))
+                if (order.TrackId.ToLower().Contains(substring.ToLower()))
                 {
                     filtered.Add(order);
                 }
@@ -63,9 +64,60 @@ namespace Delwings.Services
 
                 string placeString = $"{orderPlace.Country}, {orderPlace.City}, {orderPlace.Address}";
 
-                if (placeString.Contains(substring))
+                if (placeString.ToLower().Contains(substring.ToLower()))
                 {
                     filtered.Add(order);
+                }
+            }
+
+            return filtered;
+        }
+
+        public async Task<List<Place>> SearchPlacesByCountrySubstring(List<Place> places, string substring)
+        {
+            List<Place> filtered = new List<Place>();
+
+            foreach (Place place in places)
+            {
+                if (place.Country == null) { continue; }
+
+                if (place.Country.ToLower().Contains(substring.ToLower()))
+                {
+                    filtered.Add(place);
+                }
+            }
+
+            return filtered;
+        }
+
+        public async Task<List<Place>> SearchPlacesByCitySubstring(List<Place> places, string substring)
+        {
+            List<Place> filtered = new List<Place>();
+
+            foreach (Place place in places)
+            {
+                if (place.City == null) { continue; }
+
+                if (place.City.ToLower().Contains(substring.ToLower()))
+                {
+                    filtered.Add(place);
+                }
+            }
+
+            return filtered;
+        }
+
+        public async Task<List<Place>> SearchPlacesByAddressSubstring(List<Place> places, string substring)
+        {
+            List<Place> filtered = new List<Place>();
+
+            foreach (Place place in places)
+            {
+                if (place.Address == null) { continue; }
+
+                if (place.Address.ToLower().Contains(substring.ToLower()))
+                {
+                    filtered.Add(place);
                 }
             }
 

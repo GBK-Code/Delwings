@@ -12,7 +12,7 @@ namespace Delwings.Services
         public ApiService(HttpClient httpClient, IOptions<ApiSettings> settings) 
         { 
             _httpClient = httpClient;
-            _apiKey = settings.Value.ApiKey;
+            _apiKey = settings.Value.JsonApiKey;
         }
 
         public async Task<Dictionary<string, double>?> GetPointsAsync(string fromCity, string toCity)

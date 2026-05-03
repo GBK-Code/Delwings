@@ -1,0 +1,32 @@
+﻿<div class="table-responsive" style="max-height: 200px;">
+    <table class="table table-warning table-sm text-center align-middle">
+        <thead class="fw-bold">
+            <tr>
+                <td style="width: 5%;">ID</td>
+                <td>Address</td>
+                <td>Type</td>
+                <td>Select</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var place in Model.PlacesList)
+            {
+                if (place.Type == Delwings.Models.Enums.PlaceTypes.AcceptPoint) { continue; }
+                                
+                <tr>
+                    <td>@place.Id</td>
+                    <td>@place.Country, @place.City, @place.Address</td>
+                    <td>@place.Type</td>
+
+                    <td>
+                        <label class="theme-radio">
+                            <input type="radio" name="placeId" value="@place.Id" required />
+                            <span class="theme-inner-radio"></span>
+                            <span>Select</span>
+                        </label>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

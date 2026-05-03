@@ -44,11 +44,18 @@
         {
             <div class="d-flex flex-column flex-grow-1 gap-2 mw-100">
 
-                @* Admin List *@
-                <partial name="_AdminListCard" />
+                @* Places list*@
 
-                @* Place List*@
-                <partial name="_PlaceListCard" />
+                <div class="d-flex flex-column theme-div theme-orange-2 p-1 gap-2">
+                    <partial name="_PlaceFilterCard" />
+                </div>
+
+                <div id="placesFilteredTable">
+                    <partial name="_PlaceListCard" />
+                </div>
+
+                @* Admin List *@
+                <partial name="_AdminListCard" /> 
             </div>
         }
 
@@ -62,3 +69,4 @@
     </div>
 </div>
 
+<script src="~/js/placeFilter.js"></script>

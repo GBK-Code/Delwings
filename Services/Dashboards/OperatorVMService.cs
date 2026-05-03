@@ -105,10 +105,19 @@ namespace Delwings.Services.Dashboards
 
             List<OrderRowVM> rows = new List<OrderRowVM>();
 
+            var placesDictionary = places.ToDictionary(plc => plc.Id);
+            var accountsDictionary = accounts.ToDictionary(acc => acc.Id);
+
+            Account? courier = null;
+
             foreach (Order order in orders)
             {
-                Place? place = places.Where(plc => plc.Id == order.CurrentLocationId).FirstOrDefault();
-                Account? courier = accounts.Where(acc => acc.Id == order.CourierId).FirstOrDefault();
+                placesDictionary.TryGetValue(order.CurrentLocationId, out var place);
+
+                if (order.CourierId != null)
+                {
+                    accountsDictionary.TryGetValue(order.CourierId.Value, out courier);
+                }
 
                 var row = new OrderRowVM
                 {

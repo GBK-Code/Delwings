@@ -1,4 +1,5 @@
-﻿using Delwings.Models.Requests;
+﻿using Delwings.Models.Basic;
+using Delwings.Models.Requests;
 using Delwings.Services;
 using Delwings.Services.Dashboards;
 using Microsoft.AspNetCore.Authorization;
@@ -14,19 +15,22 @@ namespace Delwings.Controllers
         private readonly PlaceService _placeService;
         private readonly HeadDashboardService _headDashboardService;
         private readonly AccountRegistrationService _accountRegistrationService;
+        private readonly TableFilterService _tableFilterService;
 
         public HeadController 
         (
             AccountService accountService, 
             PlaceService placeService, 
             HeadDashboardService headDashboardService, 
-            AccountRegistrationService accountRegistrationService
+            AccountRegistrationService accountRegistrationService,
+            TableFilterService tableFilterService
         )
         {
             _accountService = accountService;
             _placeService = placeService;
             _headDashboardService = headDashboardService;
             _accountRegistrationService = accountRegistrationService;
+            _tableFilterService = tableFilterService;
         }
 
         public async Task<IActionResult> Dashboard(string tab)
@@ -69,6 +73,21 @@ namespace Delwings.Controllers
             if (success == false) { return BadRequest(); }
 
             return RedirectToAction("Dashboard", "Head", new { tab = "places" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterPlaces(PlacesFilterRequest request)
+        {
+            string identityName = User.Identity!.Name!;
+
+            List<Place> filtered = await _tableFilterService.GetFilteredPlaces(request);
+
+            var viewModel = await _headDashboardService.BuildAsync("tables", identityName);
+
+            if (viewModel == null) { return RedirectToAction("BadReq", "Home"); }
+            viewModel.Places = filtered;
+
+            return PartialView("_PlaceListCard", viewModel);
         }
     }
 }

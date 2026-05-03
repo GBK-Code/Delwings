@@ -139,5 +139,18 @@ namespace Delwings.Controllers
 
             return PartialView("_RedirectOrdersList", viewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterRedirectPlaces(PlacesFilterRequest request)
+        {
+            string identityName = User.Identity!.Name!;
+
+            OperatorPageVM? viewModel = await _operatorVMService.BuildDashboard("tables", identityName);
+            if (viewModel == null) { return RedirectToAction("AccessDenied", "Home"); }
+
+            viewModel.PlacesList = await _tableFilterService.GetFilteredPlaces(request);
+
+            return PartialView("_RedirectionPlacesList", viewModel);
+        }
     }
 }
