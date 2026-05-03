@@ -63,7 +63,7 @@ namespace Delwings.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitEdit(OrderRequest request)
         {
-            Order orderData = _ordersService.BuildOrder(request);
+            Order orderData = await _ordersService.BuildOrder(request);
             await _ordersService.UpdateOrderAsync(orderData.Id, orderData);
 
             return RedirectToAction("Dashboard", new { tab = "orders"} );

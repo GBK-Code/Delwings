@@ -1,0 +1,36 @@
+﻿@model Delwings.Models.ViewModels.QRPageVM;
+@{
+    Layout = null;
+}
+
+<head>
+    <link href="~/css/colors.css" rel="stylesheet" />
+    <link href="~/css/theme.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+    <link href="~/css/qrStyle.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div style="display: flex; gap: 50px;">
+        <div style="justify-content: center; text-align: center;">
+            <img src="@Model.QrURL" />
+            <h2 class="theme-text">Track QR</h2>
+            <h2 class="theme-text">Scan with any camera</h2>
+        </div>
+
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+            <h2 class="theme-text">From: @Model.OrderData.InitialCity?.ToUpper()</h2>
+            <h2 class="theme-text">To: @Model.OrderData.Destination?.ToUpper()</h2>
+            <h2 class="theme-text">Track ID: @Model.OrderData.TrackId?.ToUpper()</h2>
+
+            <img src="~/css/svg/del-logo.svg" />
+
+            <h3 class="theme-text" style="text-align: right">Please contact us if damaged</h3>
+        </div>
+    </div>
+
+    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+    <script>
+        print();
+    </script>
+</body>

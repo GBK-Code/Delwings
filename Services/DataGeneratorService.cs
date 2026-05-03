@@ -73,9 +73,10 @@ namespace Delwings.Services
             int receiverNumber = _tokensGenerator.GenerateReceiverNumber();
             int senderId = rng.Next(1, 100);
             bool isCarried = (rng.Next(2) == 1) ? true : false;
-            string? receiverContact = "contact@gmail.com";
+            string? receiverContact = "contact@gmail.com";            
             string? destination = GenerateRandomAddress(rng);
             int currentLocationId = rng.Next(1, numberOfPlaces);
+            string? initialCity = await _tokensGenerator.GenerateInitialPointString(currentLocationId);
             string? insuranceCompany = null;
             int? insurancePrice = null;
             int? courierId = null;
@@ -101,6 +102,7 @@ namespace Delwings.Services
                 SenderId = senderId,
                 IsCarried = isCarried,
                 ReceiverContact = receiverContact,
+                InitialCity = initialCity,
                 Destination = destination,
                 CurrentLocationId = currentLocationId,
                 CourierId = courierId,

@@ -66,6 +66,11 @@
                                     <input type="hidden" name="orderId" value="@row.OrderRow.Id" />
                                     <button class="theme-button theme-button-table">Delete</button>
                                 </form>
+
+                                <form method="get" asp-controller="Utility" asp-action="QRpage">
+                                    <input type="hidden" name="orderId" value="@row.OrderRow.Id" />
+                                    <button class="theme-button theme-button-table">Print QR</button>
+                                </form>
                             </div>
                         </td>
                     </tr>

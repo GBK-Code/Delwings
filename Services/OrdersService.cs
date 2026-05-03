@@ -32,8 +32,10 @@ namespace Delwings.Services
         public async Task<Order?> GetOrderByTrackIdAsync(string trackID) => await _repo.GetOrderByTrackIdAsync(trackID);
         public async Task<Order?> GetOrderByReceiverNumberAsync(int receiverNumber) => await _repo.GetOrderByReceiverNumberAsync(receiverNumber);
 
-        public Order BuildOrder(OrderRequest request)
+        public async Task<Order> BuildOrder(OrderRequest request)
         {
+            string? initialPoint = await _tokenGenerator.GenerateInitialPointString(request.CurrentPlaceId);
+
             Order order = new Order()
             {
                 Id = request.Id,
@@ -45,6 +47,7 @@ namespace Delwings.Services
                 SenderId = request.SenderId,
                 IsCarried = false,
                 ReceiverContact = request.Contact,
+                InitialCity = initialPoint,
                 Destination = request.Destination,
                 CurrentLocationId = request.CurrentPlaceId,
                 CourierId = request.CourierId,
@@ -70,7 +73,7 @@ namespace Delwings.Services
 
         public async Task<int> CreateOrderAsync(OrderRequest request)
         {
-            Order order = BuildOrder(request);
+            Order order = await BuildOrder(request);
             if (request.TrackId == null) { order.TrackId = _tokenGenerator.GenerateTrackId(); }
 
             order.ReceiverNumber = _tokenGenerator.GenerateReceiverNumber();

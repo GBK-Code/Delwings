@@ -13,6 +13,7 @@ namespace Delwings.Models.Basic
         public int SenderId { get; set; }
         public bool IsCarried { get; set; } = false;
         public string? ReceiverContact { get; set; }
+        public string? InitialCity { get; set; }
         public string? Destination { get; set; }
         public int CurrentLocationId { get; set; }
         public int? CourierId { get; set; }
