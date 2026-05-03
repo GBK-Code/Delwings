@@ -1,4 +1,5 @@
 ﻿using Delwings.Models.Basic;
+using Delwings.Models.ViewModels.Tables;
 
 namespace Delwings.Models.ViewModels
 {
@@ -7,6 +8,7 @@ namespace Delwings.Models.ViewModels
         public Account Me { get; set; }
         public string Tab { get; set; }
         public List<Order> OrdersList { get; set; }
+        public List<OrderRowVM> OrderRows { get; set; }
         public List<Place> PlacesList { get; set; }
         public Place WorkingPlace { get; set; }
         public List<Account> AcceptedCourierList { get; set; }

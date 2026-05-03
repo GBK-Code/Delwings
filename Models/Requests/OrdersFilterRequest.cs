@@ -4,6 +4,7 @@
     {
         // Date
         public string? From { get; set; }
+        // Date
         public string? To { get; set; }
         public bool Ordinary { get; set; }
         public bool Express { get; set; }

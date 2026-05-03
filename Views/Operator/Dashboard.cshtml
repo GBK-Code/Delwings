@@ -33,7 +33,7 @@
                 }
 
                 <div class="mw-100" style="min-width: 0px; overflow: hidden;">
-                    <partial name="_OrdersListCard" />
+                    <partial name="_OrdersListCard" model="Model.OrderRows" />
                 </div>
             </div>
         }
@@ -42,10 +42,10 @@
         {
             <div class="d-flex flex-column mw-100 gap-1">
                 
-                <partial name="_OrdersFilterCard" />
+                <partial name="_OrdersFilterCard"/>
 
                 <div id="ordersSearchTable" style="min-width: 0px; overflow: hidden;">
-                    <partial name="_OrdersListCard" />
+                    <partial name="_OrdersListCard" model="Model.OrderRows" />
                 </div>
             </div>
         }

@@ -53,6 +53,7 @@ builder.Services.AddScoped<OperatorVMService>();
 builder.Services.AddScoped<CourierDashboardService>();
 builder.Services.AddScoped<UserDashboardService>();
 builder.Services.AddScoped<TrackPageService>();
+builder.Services.AddScoped<DeveloperPageService>();
 
 // Database
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();

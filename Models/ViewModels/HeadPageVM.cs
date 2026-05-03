@@ -8,5 +8,6 @@ namespace Delwings.Models.ViewModels
         public List<Account> AdminAccounts { get; set; }
         public List<Place> Places { get; set; }
         public string Tab { get; set; }
+        public DevToolsModel DeveloperModel { get; set; }
     }
 }

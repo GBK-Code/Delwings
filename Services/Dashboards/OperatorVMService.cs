@@ -2,6 +2,7 @@
 using Delwings.Models.Enums;
 using Delwings.Models.Requests;
 using Delwings.Models.ViewModels;
+using Delwings.Models.ViewModels.Tables;
 
 
 namespace Delwings.Services.Dashboards
@@ -15,12 +16,12 @@ namespace Delwings.Services.Dashboards
         private readonly CourierOrdersService _courierOrdersService;
         private readonly CourierApplicationService _courierApplicationService;
 
-        public OperatorVMService 
+        public OperatorVMService
             (
-                AccountService accountService, 
-                OrdersService ordersService, 
-                OperatorPlacesService operatorPlacesService, 
-                PlaceService placeService, 
+                AccountService accountService,
+                OrdersService ordersService,
+                OperatorPlacesService operatorPlacesService,
+                PlaceService placeService,
                 CourierOrdersService courierOrdersService,
                 CourierApplicationService courierApplicationService
             )
@@ -53,22 +54,20 @@ namespace Delwings.Services.Dashboards
             if (oper == null) { return null; }
 
             var orders = await _ordersService.GetAllOrdersAsync();
-
-            var operatorPlace = await _operatorPlacesService.GetOperatorPlaceByOperatorIdAsync(oper.Id);
-            if (operatorPlace == null) { return null; }
-
             var places = await _placeService.GetAllPlacesAsync();
+            var courierOrders = await _courierOrdersService.GetAllCourierOrdersAsync();
 
-            var workingPlace = await _placeService.GetPlaceByIdAsync(operatorPlace.PlaceId);
+            Place? workingPlace = await GetOperatorWorkingPlaceByIdentityAsync(identityName);
             if (workingPlace == null) { return null; }
 
-            var courierOrders = await _courierOrdersService.GetAllCourierOrdersAsync();
+            List<OrderRowVM> orderRows = await GetOrdersTableRows(orders);
 
             var viewModel = new OperatorPageVM
             {
                 Me = oper,
                 Tab = tab,
                 OrdersList = orders.ToList(),
+                OrderRows = orderRows,
                 WorkingPlace = workingPlace,
                 PlacesList = places.ToList(),
                 AcceptedCourierList = acceptedCouriers,
@@ -78,16 +77,15 @@ namespace Delwings.Services.Dashboards
             return viewModel;
         }
 
-        public async Task<EditOrderPAgeVM?> BuildEditOrderPage(OrderRequest request)
+        public async Task<EditOrderPAgeVM?> BuildEditOrderPage(int id)
         {
-            OrderTypes type = request.OrderType;
-
-            Order orderData = _ordersService.BuildOrder(request);
+            Order? orderData = await _ordersService.GetOrderByIdAsync(id);
+            if (orderData == null) { return null; }
             Account? courier = null;
 
-            if (request.CourierId != null)
+            if (orderData.CourierId != null)
             {
-                courier = await _accountService.GetAccountByIdAsync(request.CourierId.Value);
+                courier = await _accountService.GetAccountByIdAsync(orderData.CourierId.Value);
                 if (courier == null) { return null; }
             }
 
@@ -98,6 +96,45 @@ namespace Delwings.Services.Dashboards
             };
 
             return vm;
+        }
+
+        public async Task<List<OrderRowVM>> GetOrdersTableRows(List<Order> orders)
+        {
+            var accounts = await _accountService.GetAllAccountsAsync();
+            var places = await _placeService.GetAllPlacesAsync();
+
+            List<OrderRowVM> rows = new List<OrderRowVM>();
+
+            foreach (Order order in orders)
+            {
+                Place? place = places.Where(plc => plc.Id == order.CurrentLocationId).FirstOrDefault();
+                Account? courier = accounts.Where(acc => acc.Id == order.CourierId).FirstOrDefault();
+
+                var row = new OrderRowVM
+                {
+                    OrderRow = order,
+                    PlaceRow = place,
+                    AccountRow = courier
+                };
+
+                rows.Add(row);
+            }
+
+            return rows;
+        }
+
+        public async Task<Place?> GetOperatorWorkingPlaceByIdentityAsync(string identityName)
+        {
+            var oper = await _accountService.GetAccountByLoginAsync(identityName);
+            if (oper == null) { return null; }
+
+            var operatorPlace = await _operatorPlacesService.GetOperatorPlaceByOperatorIdAsync(oper.Id);
+            if (operatorPlace == null) { return null; }
+
+            var workingPlace = await _placeService.GetPlaceByIdAsync(operatorPlace.PlaceId);
+            if (workingPlace == null) { return null; }
+
+            return workingPlace;
         }
     }
 }

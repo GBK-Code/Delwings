@@ -1,7 +1,7 @@
 ﻿using Delwings.Models.Basic;
-using Delwings.Models.Enums;
 using Delwings.Models.Requests;
 using Delwings.Models.ViewModels;
+using Delwings.Models.ViewModels.Tables;
 using Delwings.Services;
 using Delwings.Services.Dashboards;
 using Microsoft.AspNetCore.Authorization;
@@ -52,9 +52,9 @@ namespace Delwings.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditOrder(OrderRequest request)
+        public async Task<IActionResult> EditOrder(int id)
         {
-            EditOrderPAgeVM? viewModel = await _operatorVMService.BuildEditOrderPage(request);
+            EditOrderPAgeVM? viewModel = await _operatorVMService.BuildEditOrderPage(id);
             if (viewModel == null) { return RedirectToAction("AccessDenied", "Home"); }
             
             return View(viewModel);
@@ -95,9 +95,15 @@ namespace Delwings.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AssignOrderPlace(string trackId, int placeId)
+        public async Task<IActionResult> AssignOrderPlace(string trackId)
         {
-            bool success = await _ordersService.ReassignOrderPlaceAsync(trackId, placeId);
+            string? identityName = User.Identity?.Name;
+            if (identityName == null) { return RedirectToAction("AccessDenied", "Home"); }
+
+            Place? workingPlace = await _operatorVMService.GetOperatorWorkingPlaceByIdentityAsync(identityName);
+            if (workingPlace == null) { return RedirectToAction("BadReq", "Home"); }
+
+            bool success = await _ordersService.ReassignOrderPlaceAsync(trackId, workingPlace.Id);
             if (!success) { return RedirectToAction("BadReq", "Home"); }
 
             return RedirectToAction("Dashboard", new { tab = "orders" });
@@ -115,14 +121,10 @@ namespace Delwings.Controllers
         [HttpGet]
         public async Task<IActionResult> FilterOrders(OrdersFilterRequest request)
         {
-            string identityName = User.Identity!.Name!;
+            List<Order> orders = await _tableFilterService.GetFilteredOrders(request);
+            List<OrderRowVM> ordersRows = await _operatorVMService.GetOrdersTableRows(orders);
 
-            OperatorPageVM? viewModel = await _operatorVMService.BuildDashboard("tables", identityName);
-            if (viewModel == null) { return RedirectToAction("AccessDenied", "Home"); }
-
-            viewModel.OrdersList = await _tableFilterService.GetFilteredOrders(request);
-
-            return PartialView("_OrdersListCard", viewModel);
+            return PartialView("_OrdersListCard", ordersRows);
         }
 
         [HttpGet]
