@@ -2,8 +2,8 @@
 const cityInput = document.getElementById("city");
 const addressInput = document.getElementById("address");
 
-const sortingCheckbox = document.getElementsByName("placeTypeCheck")[1];
-const pickupCheckbox = document.getElementsByName("placeTypeCheck")[2];
+const sortingCheckbox = document.getElementsByName("placeTypeCheck")[0];
+const pickupCheckbox = document.getElementsByName("placeTypeCheck")[1];
 
 async function filterRedirectPlaces() {
     const country = countryInput.value;

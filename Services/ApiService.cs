@@ -1,7 +1,10 @@
 ﻿using Delwings.Models.Basic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Net;
+using System.Net.Sockets;
 using System.Text.Json;
+
 
 namespace Delwings.Services
 {
@@ -14,6 +17,19 @@ namespace Delwings.Services
         { 
             _httpClient = httpClient;
             _settings = settings;
+        }
+
+
+        private string? GetLocalIP()
+        {
+            using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP);
+            socket.Connect("8.8.8.8", 65530);
+
+            var endPoint = socket.LocalEndPoint as IPEndPoint;
+            var address = endPoint?.Address.ToString();
+            var port = endPoint?.Port.ToString();
+
+            return $"{address}:{port}";
         }
 
         public async Task<Dictionary<string, double>?> GetPointsAsync(string fromCity, string toCity)
@@ -69,7 +85,10 @@ namespace Delwings.Services
 
         public string GetQRApi(string trackId)
         {
-            string qrAPI = $"{_settings.Value.QRApi}&data={_settings.Value.TrackURL}{trackId}";
+            string? ip = GetLocalIP();
+            string? trackURL = $"http://{ip}/Track?trackToken=";
+
+            string qrAPI = $"{_settings.Value.QRApi}&data={trackURL}{trackId}";
             return qrAPI;
         }
     }
