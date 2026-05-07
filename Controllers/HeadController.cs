@@ -16,6 +16,7 @@ namespace Delwings.Controllers
         private readonly HeadDashboardService _headDashboardService;
         private readonly AccountRegistrationService _accountRegistrationService;
         private readonly TableFilterService _tableFilterService;
+        private readonly FileMakerService _fileMakerService;
 
         public HeadController 
         (
@@ -23,7 +24,8 @@ namespace Delwings.Controllers
             PlaceService placeService, 
             HeadDashboardService headDashboardService, 
             AccountRegistrationService accountRegistrationService,
-            TableFilterService tableFilterService
+            TableFilterService tableFilterService,
+            FileMakerService fileMakerService
         )
         {
             _accountService = accountService;
@@ -31,6 +33,7 @@ namespace Delwings.Controllers
             _headDashboardService = headDashboardService;
             _accountRegistrationService = accountRegistrationService;
             _tableFilterService = tableFilterService;
+            _fileMakerService = fileMakerService;
         }
 
         public async Task<IActionResult> Dashboard(string tab)
@@ -88,6 +91,14 @@ namespace Delwings.Controllers
             viewModel.Places = filtered;
 
             return PartialView("_PlaceListCard", viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadExcelReport()
+        {
+            var byteStream = await _fileMakerService.GenerateExcelReport();
+
+            return File(byteStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "repost.xlsx");
         }
     }
 }

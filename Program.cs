@@ -39,6 +39,7 @@ builder.Services.AddScoped<TableFilterService>();
 builder.Services.AddScoped<DataGeneratorService>();
 builder.Services.AddScoped<DataEraserService>();
 builder.Services.AddScoped<QRPageService>();
+builder.Services.AddScoped<FileMakerService>();
 
 // Specific
 builder.Services.AddScoped<AccountRegistrationService>();
