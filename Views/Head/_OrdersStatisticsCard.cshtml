@@ -1,0 +1,87 @@
+﻿@model Delwings.Models.ViewModels.HeadPageVM;
+
+@{
+    int ordinaryNum = Model.Orders.Where(ord => ord.OrderType == Delwings.Models.Enums.OrderTypes.Ordinary).ToList().Count();
+    int expressNum = Model.Orders.Where(ord => ord.OrderType == Delwings.Models.Enums.OrderTypes.Express).ToList().Count();
+    int insuredNum = Model.Orders.Where(ord => ord.OrderType == Delwings.Models.Enums.OrderTypes.Insured).ToList().Count();
+
+    int headAdmins = Model.Accounts.Where(acc => acc.Role == Delwings.Models.Enums.AccountRoles.Head).ToList().Count();
+    int admins = Model.Accounts.Where(acc => acc.Role == Delwings.Models.Enums.AccountRoles.Admin).ToList().Count();
+    int operators = Model.Accounts.Where(acc => acc.Role == Delwings.Models.Enums.AccountRoles.Operator).ToList().Count();
+    int couriers = Model.Accounts.Where(acc => acc.Role == Delwings.Models.Enums.AccountRoles.Courier).ToList().Count();
+    int users = Model.Accounts.Where(acc => acc.Role == Delwings.Models.Enums.AccountRoles.User).ToList().Count();
+
+    int acceptsPlaces = Model.Places.Where(plc => plc.Type == Delwings.Models.Enums.PlaceTypes.AcceptPoint).ToList().Count();
+    int sortingPlaces = Model.Places.Where(plc => plc.Type == Delwings.Models.Enums.PlaceTypes.SortingPoint).ToList().Count();
+    int pickupPlaces = Model.Places.Where(plc => plc.Type == Delwings.Models.Enums.PlaceTypes.PickUpPoint).ToList().Count();
+}
+
+<div class="theme-div theme-orange-2">
+    <div class="d-flex flex-wrap p-3 w-100 justify-content-evenly flex-grow-1">
+        <div class="d-flex flex-column justify-content-evenly">
+            <h4 class="theme-text">Orders</h4>
+            <h6 class="theme-text">Total number of orders: @Model.Orders.Count()</h6>
+            <h6 class="theme-text">Number of Ordinary orders: @ordinaryNum</h6>
+            <h6 class="theme-text">Number of Express orders: @expressNum</h6>
+            <h6 class="theme-text">Number of Insured orders: @insuredNum</h6>
+        </div>
+
+        <canvas id="ordersPieChart" width="500" height="200"></canvas>   
+    </div>
+</div>
+
+<div class="theme-div theme-orange-2">
+    <div class="d-flex flex-wrap p-3 w-100 justify-content-evenly flex-grow-1">
+        <div class="d-flex flex-column justify-content-evenly">
+            <h4 class="theme-text">Accounts</h4>
+            <h6 class="theme-text">Total number of accounts: @Model.Accounts.Count()</h6>
+            <h6 class="theme-text">Number of Head Administrators: @headAdmins</h6>
+            <h6 class="theme-text">Number of Admins: @admins</h6>
+            <h6 class="theme-text">Number of Operators: @operators</h6>
+            <h6 class="theme-text">Number of Couriers: @couriers</h6>
+            <h6 class="theme-text">Number of Users: @users</h6>
+        </div>
+
+        <canvas id="accountsPieChart" width="500" height="200"></canvas>
+    </div>
+</div>
+
+<div class="theme-div theme-orange-2">
+    <div class="d-flex flex-wrap p-3 w-100 justify-content-evenly flex-grow-1">
+        <div class="d-flex flex-column justify-content-evenly">
+            <h4 class="theme-text">Places</h4>
+            <h6 class="theme-text">Total number of places: @Model.Places.Count()</h6>
+            <h6 class="theme-text">Number of Accept Points: @acceptsPlaces</h6>
+            <h6 class="theme-text">Number of Sorting Points: @sortingPlaces</h6>
+            <h6 class="theme-text">Number of Pickup Points: @pickupPlaces</h6>
+        </div>
+
+        <canvas id="placesPieChart" width="500" height="200"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const orderData = {
+        ordinary: @ordinaryNum,
+        express: @expressNum,
+        insured: @insuredNum
+    }
+
+    const accountData = {
+        headAdmins: @headAdmins,
+        admins: @admins,
+        operators: @operators,
+        couriers: @couriers,
+        users: @users
+    }
+
+    const placesData = {
+        accept: @acceptsPlaces,
+        sorting: @sortingPlaces,
+        pickup: @pickupPlaces
+    }
+</script>
+
+<script src="~/js/pieChartBuilder.js"></script>

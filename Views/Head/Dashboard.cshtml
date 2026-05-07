@@ -59,10 +59,17 @@
             </div>
         }
 
+        @if (Model.Tab == "statistics")
+        {
+            <div class="d-flex flex-column flex-grow-1 gap-2 mw-100">
+                <partial name="_OrdersStatisticsCard" />
+            </div>
+        }
+
         @if (Model.Tab == "devtools")
         {
             <div class="mw-100">
-                <partial name="_DevTools.cshtml" />
+                <partial name="_DevTools" />
             </div>
         }
 

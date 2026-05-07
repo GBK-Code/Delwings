@@ -46,6 +46,8 @@ namespace Delwings.Services.Dashboards
             {
                 Me = user,
                 Tab = tab,
+                Orders = orders,
+                Accounts = users,
                 AdminAccounts = _admins,
                 Places = places,
                 DeveloperModel = devTools
